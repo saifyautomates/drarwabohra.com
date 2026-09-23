@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import type { Product } from "@/lib/data";
 
@@ -17,8 +17,47 @@ export default function ProductCard({
 }: ProductCardProps) {
   const [showDetail, setShowDetail] = useState(false);
   const [activeImage, setActiveImage] = useState(product.image);
+  const [fullscreenIndex, setFullscreenIndex] = useState<number | null>(null);
+  const [isZoomed, setIsZoomed] = useState(false);
 
   const allImages = [product.image, ...(product.gallery || [])].filter(Boolean);
+
+  const openFullscreen = (index: number) => {
+    setFullscreenIndex(index);
+    setIsZoomed(false);
+  };
+
+  const closeFullscreen = () => {
+    setFullscreenIndex(null);
+    setIsZoomed(false);
+  };
+
+  const nextFullscreen = useCallback(() => {
+    if (fullscreenIndex === null || allImages.length <= 1) return;
+    setFullscreenIndex((prev) => ((prev ?? 0) + 1) % allImages.length);
+    setIsZoomed(false);
+  }, [fullscreenIndex, allImages.length]);
+
+  const prevFullscreen = useCallback(() => {
+    if (fullscreenIndex === null || allImages.length <= 1) return;
+    setFullscreenIndex((prev) =>
+      (prev ?? 0) === 0 ? allImages.length - 1 : (prev ?? 0) - 1
+    );
+    setIsZoomed(false);
+  }, [fullscreenIndex, allImages.length]);
+
+  useEffect(() => {
+    if (fullscreenIndex === null) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeFullscreen();
+      if (e.key === "ArrowRight") nextFullscreen();
+      if (e.key === "ArrowLeft") prevFullscreen();
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [fullscreenIndex, nextFullscreen, prevFullscreen]);
 
   const discountPct =
     product.originalPrice && product.originalPrice > product.price
@@ -98,10 +137,30 @@ export default function ProductCard({
           )}
 
           {/* Quick Details Hover Overlay */}
-          <div className="absolute inset-0 bg-ink/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-            <span className="rounded-full bg-white/95 px-4 py-1.5 text-xs font-bold text-ink shadow-md backdrop-blur">
+          <div className="absolute inset-0 bg-ink/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 p-3">
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                openModal();
+              }}
+              className="rounded-full bg-white/95 px-3 py-1.5 text-xs font-bold text-ink shadow-md backdrop-blur hover:bg-white transition-all transform hover:scale-105"
+            >
               Quick View
-            </span>
+            </button>
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                openFullscreen(0);
+              }}
+              className="rounded-full bg-emerald-dark/90 px-3 py-1.5 text-xs font-bold text-white shadow-md backdrop-blur hover:bg-emerald-dark transition-all transform hover:scale-105 flex items-center gap-1"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+              </svg>
+              <span>Full Screen</span>
+            </button>
           </div>
         </div>
 
@@ -188,27 +247,54 @@ export default function ProductCard({
             <div className="flex flex-col sm:flex-row gap-6">
               {/* Product Image & Gallery */}
               <div className="w-full sm:w-64 shrink-0 flex flex-col">
-                <div className="relative aspect-square w-full overflow-hidden rounded-2xl border border-line bg-paper shadow-inner">
+                <div
+                  className="group/img relative aspect-square w-full overflow-hidden rounded-2xl border border-line bg-paper shadow-inner cursor-zoom-in"
+                  onClick={() => {
+                    const idx = allImages.indexOf(activeImage);
+                    openFullscreen(idx !== -1 ? idx : 0);
+                  }}
+                >
                   {activeImage && (
                     <img
                       src={activeImage}
                       alt={product.title}
-                      className="h-full w-full object-cover transition-all duration-300"
+                      className="h-full w-full object-cover transition-all duration-300 group-hover/img:scale-105"
                     />
                   )}
-                  {activeImage === product.image ? (
-                    <span className="absolute bottom-2 right-2 rounded-full bg-black/60 px-2 py-0.5 text-[9px] font-bold text-white backdrop-blur">
-                      Studio Packshot
-                    </span>
-                  ) : activeImage.includes("guide") ? (
-                    <span className="absolute bottom-2 right-2 rounded-full bg-emerald-dark/80 px-2 py-0.5 text-[9px] font-bold text-white backdrop-blur">
-                      Clinical Guide
-                    </span>
-                  ) : (
-                    <span className="absolute bottom-2 right-2 rounded-full bg-gold/90 px-2 py-0.5 text-[9px] font-bold text-white backdrop-blur">
-                      Clinic Batch
-                    </span>
-                  )}
+
+                  {/* Fullscreen Button Overlay */}
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      const idx = allImages.indexOf(activeImage);
+                      openFullscreen(idx !== -1 ? idx : 0);
+                    }}
+                    className="absolute top-2.5 right-2.5 flex items-center gap-1 rounded-full bg-black/70 hover:bg-black/90 px-2.5 py-1 text-[10px] font-semibold text-white backdrop-blur shadow-md transition-all z-10"
+                    title="View Fullscreen"
+                  >
+                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                    </svg>
+                    <span>Full Screen</span>
+                  </button>
+
+                  {/* Image Category Badge */}
+                  <div className="absolute bottom-2 left-2 flex items-center gap-1.5 pointer-events-none">
+                    {activeImage === product.image ? (
+                      <span className="rounded-full bg-black/60 px-2 py-0.5 text-[9px] font-bold text-white backdrop-blur">
+                        Studio Photography
+                      </span>
+                    ) : activeImage.includes("guide") ? (
+                      <span className="rounded-full bg-emerald-dark/80 px-2 py-0.5 text-[9px] font-bold text-white backdrop-blur">
+                        Clinical Guide
+                      </span>
+                    ) : (
+                      <span className="rounded-full bg-gold/90 px-2 py-0.5 text-[9px] font-bold text-white backdrop-blur">
+                        Clinic Batch
+                      </span>
+                    )}
+                  </div>
                 </div>
 
                 {allImages.length > 1 && (
@@ -233,6 +319,10 @@ export default function ProductCard({
                     ))}
                   </div>
                 )}
+
+                <p className="mt-2 text-[10px] text-smoke text-center">
+                  💡 Click image for high-res full screen
+                </p>
               </div>
 
               {/* Product Info */}
@@ -325,6 +415,147 @@ export default function ProductCard({
                   </a>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Fullscreen Lightbox Modal */}
+      {fullscreenIndex !== null && allImages[fullscreenIndex] && (
+        <div
+          className="fixed inset-0 z-[100] flex flex-col justify-between bg-black/95 backdrop-blur-md p-4 sm:p-6 text-white animate-in fade-in duration-200"
+          onClick={closeFullscreen}
+        >
+          {/* Top Header Bar */}
+          <div
+            className="flex items-center justify-between z-20 pb-3 border-b border-white/10 shrink-0"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center gap-3">
+              <span className="font-display font-bold text-sm sm:text-base text-white truncate max-w-[200px] sm:max-w-md">
+                {product.title}
+              </span>
+              <span className="rounded-full bg-white/15 px-2.5 py-0.5 text-xs text-white/90">
+                {fullscreenIndex + 1} / {allImages.length}
+              </span>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setIsZoomed((z) => !z)}
+                className="rounded-full bg-white/10 hover:bg-white/20 p-2 text-xs text-white transition-colors flex items-center gap-1.5 px-3"
+                title="Toggle Zoom"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7" />
+                </svg>
+                <span className="hidden sm:inline">{isZoomed ? "Reset Zoom" : "Zoom 1.5x"}</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={closeFullscreen}
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors text-lg"
+                title="Close (Esc)"
+              >
+                ✕
+              </button>
+            </div>
+          </div>
+
+          {/* Center High-Resolution Image Display with Prev/Next Navigation */}
+          <div
+            className="relative flex-1 flex items-center justify-center overflow-hidden my-3 cursor-zoom-in"
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsZoomed((z) => !z);
+            }}
+          >
+            {/* Previous Button */}
+            {allImages.length > 1 && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  prevFullscreen();
+                }}
+                className="absolute left-2 sm:left-6 z-20 flex h-12 w-12 items-center justify-center rounded-full bg-black/60 hover:bg-black/90 text-white backdrop-blur border border-white/20 transition-all hover:scale-110 text-2xl font-light"
+                title="Previous Image (Left Arrow)"
+              >
+                ‹
+              </button>
+            )}
+
+            {/* Main Image */}
+            <img
+              src={allImages[fullscreenIndex]}
+              alt={`${product.title} - View ${fullscreenIndex + 1}`}
+              className={`max-h-[75vh] max-w-[90vw] object-contain rounded-2xl shadow-2xl transition-transform duration-300 ${
+                isZoomed ? "scale-150 cursor-zoom-out" : "scale-100"
+              }`}
+            />
+
+            {/* Next Button */}
+            {allImages.length > 1 && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  nextFullscreen();
+                }}
+                className="absolute right-2 sm:right-6 z-20 flex h-12 w-12 items-center justify-center rounded-full bg-black/60 hover:bg-black/90 text-white backdrop-blur border border-white/20 transition-all hover:scale-110 text-2xl font-light"
+                title="Next Image (Right Arrow)"
+              >
+                ›
+              </button>
+            )}
+          </div>
+
+          {/* Bottom Bar: Thumbnails & Quick Actions */}
+          <div
+            className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-3 border-t border-white/10 z-20 shrink-0"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Thumbnail Strip */}
+            <div className="flex items-center gap-2 overflow-x-auto max-w-full pb-1">
+              {allImages.map((img, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  onClick={() => {
+                    setFullscreenIndex(idx);
+                    setActiveImage(img);
+                    setIsZoomed(false);
+                  }}
+                  className={`relative h-14 w-14 sm:h-16 sm:w-16 shrink-0 overflow-hidden rounded-xl border-2 transition-all cursor-pointer ${
+                    fullscreenIndex === idx
+                      ? "border-emerald ring-2 ring-emerald scale-105 opacity-100"
+                      : "border-white/30 opacity-60 hover:opacity-100"
+                  }`}
+                >
+                  <img
+                    src={img}
+                    alt={`Thumbnail ${idx + 1}`}
+                    className="h-full w-full object-cover"
+                  />
+                </button>
+              ))}
+            </div>
+
+            {/* Shortcuts & CTA */}
+            <div className="flex items-center gap-4 text-xs text-white/70">
+              <span className="hidden md:inline">
+                ⌨ Esc to close • ← → to switch • Click to zoom
+              </span>
+              <a
+                href={waUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="btn-primary text-xs py-2 px-5 bg-emerald hover:bg-emerald-dark text-white rounded-full shadow-lg font-bold"
+              >
+                Buy on WhatsApp (₹{product.price})
+              </a>
             </div>
           </div>
         </div>

@@ -18,10 +18,11 @@
     "originalPrice": 699,
     "size": "50 ml",
     "category": "Skin Care",
-    "image": "/images/products/clear-skin-solution.jpg",
+    "image": "/images/products/face-serum.jpg",
     "gallery": [
       "/images/products/clear-skin-solution-guide.jpg",
-      "/images/products/clear-skin-solution-batch.jpg"
+      "/images/products/clear-skin-solution-batch.jpg",
+      "/images/products/clear-skin-solution.jpg"
     ],
     "inStock": true,
     "featured": true,
@@ -47,9 +48,10 @@
     "originalPrice": 699,
     "size": "50 ml",
     "category": "Hair Care",
-    "image": "/images/products/homeopathic-hair-serum.jpg",
+    "image": "/images/products/hair-serum.jpg",
     "gallery": [
-      "/images/products/hair-serum-guide.jpg"
+      "/images/products/hair-serum-guide.jpg",
+      "/images/products/homeopathic-hair-serum.jpg"
     ],
     "inStock": true,
     "featured": true,
@@ -75,9 +77,10 @@
     "originalPrice": 550,
     "size": "100 ml",
     "category": "Hair Care",
-    "image": "/images/products/biphasic-herbal-hair-oil.jpg",
+    "image": "/images/products/scalp-oil.jpg",
     "gallery": [
-      "/images/products/biphasic-hair-oil-real.jpg"
+      "/images/products/biphasic-hair-oil-real.jpg",
+      "/images/products/biphasic-herbal-hair-oil.jpg"
     ],
     "inStock": true,
     "featured": true,
