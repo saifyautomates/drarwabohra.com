@@ -357,7 +357,7 @@ export default function Wizard({
         return;
       }
       setOtpSent(true);
-      setOtp("");
+      setOtp("123456");
     } finally {
       setOtpSending(false);
     }
@@ -908,10 +908,19 @@ export default function Wizard({
             We&rsquo;ll send booking updates and reminders on this number.
           </p>
 
-          <div className="mt-5 rounded-xl border border-gold/40 bg-gold-soft px-4 py-3 text-sm text-ink">
-            <span className="font-semibold">Demo mode —</span> enter any 6-digit
-            code. The MSG91 integration point is marked in the code for the real
-            SMS flow.
+          <div className="mt-5 rounded-xl border border-gold/40 bg-gold-soft px-4 py-3 text-sm text-ink flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <span className="font-semibold">Demo mode —</span> OTP is <strong className="font-mono font-bold text-emerald-dark bg-white px-2.5 py-0.5 rounded border border-emerald/20 text-base">123456</strong>
+            </div>
+            {otpSent && !otpVerified && (
+              <button
+                type="button"
+                onClick={() => setOtp("123456")}
+                className="text-xs font-bold text-emerald-dark bg-white border border-emerald/30 px-2.5 py-1 rounded-lg hover:bg-emerald-soft transition-colors"
+              >
+                Use 123456
+              </button>
+            )}
           </div>
 
           <label htmlFor="mobile" className="field-label mt-5">

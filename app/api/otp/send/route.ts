@@ -66,6 +66,6 @@ export async function POST(req: Request) {
 
   return NextResponse.json({
     demo: true,
-    message: "Demo mode — enter any 6-digit code.",
+    message: "Demo mode — OTP is 123456",
   });
 }
