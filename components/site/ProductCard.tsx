@@ -16,6 +16,9 @@ export default function ProductCard({
   upiNumber = "7049205128",
 }: ProductCardProps) {
   const [showDetail, setShowDetail] = useState(false);
+  const [activeImage, setActiveImage] = useState(product.image);
+
+  const allImages = [product.image, ...(product.gallery || [])].filter(Boolean);
 
   const discountPct =
     product.originalPrice && product.originalPrice > product.price
@@ -29,11 +32,16 @@ export default function ProductCard({
   );
   const waUrl = `https://wa.me/${whatsapp.replace(/\D/g, "")}?text=${orderMsg}`;
 
+  const openModal = () => {
+    setActiveImage(product.image);
+    setShowDetail(true);
+  };
+
   return (
     <>
       <div className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-line bg-white shadow-xs transition-all duration-300 hover:border-emerald/40 hover:shadow-card">
         {/* Image Container with Badges */}
-        <div className="relative aspect-square w-full overflow-hidden bg-paper/60 cursor-pointer" onClick={() => setShowDetail(true)}>
+        <div className="relative aspect-square w-full overflow-hidden bg-paper/60 cursor-pointer" onClick={openModal}>
           {product.image ? (
             product.image.startsWith("data:") || product.image.startsWith("/") ? (
               <img
@@ -78,6 +86,16 @@ export default function ProductCard({
               {product.inStock ? "In Stock" : "Sold Out"}
             </span>
           </div>
+
+          {/* Multi-view badge */}
+          {allImages.length > 1 && (
+            <div className="absolute bottom-3 left-3 pointer-events-none">
+              <span className="rounded-full bg-ink/75 px-2.5 py-1 text-[10px] font-bold tracking-wide text-white backdrop-blur flex items-center gap-1 shadow-xs">
+                <span>📸</span>
+                <span>{allImages.length} Views</span>
+              </span>
+            </div>
+          )}
 
           {/* Quick Details Hover Overlay */}
           <div className="absolute inset-0 bg-ink/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
@@ -126,7 +144,7 @@ export default function ProductCard({
             <div className="grid grid-cols-2 gap-2">
               <button
                 type="button"
-                onClick={() => setShowDetail(true)}
+                onClick={openModal}
                 className="btn-outline text-xs py-2 px-2 text-center"
               >
                 Details
@@ -162,20 +180,58 @@ export default function ProductCard({
             <button
               type="button"
               onClick={() => setShowDetail(false)}
-              className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full text-smoke hover:bg-paper hover:text-ink transition-colors"
+              className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full text-smoke hover:bg-paper hover:text-ink transition-colors z-10"
             >
               ✕
             </button>
 
             <div className="flex flex-col sm:flex-row gap-6">
-              {/* Product Image */}
-              <div className="relative aspect-square w-full sm:w-60 shrink-0 overflow-hidden rounded-2xl border border-line bg-paper">
-                {product.image && (
-                  <img
-                    src={product.image}
-                    alt={product.title}
-                    className="h-full w-full object-cover"
-                  />
+              {/* Product Image & Gallery */}
+              <div className="w-full sm:w-64 shrink-0 flex flex-col">
+                <div className="relative aspect-square w-full overflow-hidden rounded-2xl border border-line bg-paper shadow-inner">
+                  {activeImage && (
+                    <img
+                      src={activeImage}
+                      alt={product.title}
+                      className="h-full w-full object-cover transition-all duration-300"
+                    />
+                  )}
+                  {activeImage === product.image ? (
+                    <span className="absolute bottom-2 right-2 rounded-full bg-black/60 px-2 py-0.5 text-[9px] font-bold text-white backdrop-blur">
+                      Studio Packshot
+                    </span>
+                  ) : activeImage.includes("guide") ? (
+                    <span className="absolute bottom-2 right-2 rounded-full bg-emerald-dark/80 px-2 py-0.5 text-[9px] font-bold text-white backdrop-blur">
+                      Clinical Guide
+                    </span>
+                  ) : (
+                    <span className="absolute bottom-2 right-2 rounded-full bg-gold/90 px-2 py-0.5 text-[9px] font-bold text-white backdrop-blur">
+                      Clinic Batch
+                    </span>
+                  )}
+                </div>
+
+                {allImages.length > 1 && (
+                  <div className="mt-3 flex gap-2 overflow-x-auto pb-1">
+                    {allImages.map((img, idx) => (
+                      <button
+                        key={idx}
+                        type="button"
+                        onClick={() => setActiveImage(img)}
+                        className={`relative h-14 w-14 shrink-0 overflow-hidden rounded-xl border-2 transition-all cursor-pointer ${
+                          activeImage === img
+                            ? "border-emerald shadow-sm ring-2 ring-emerald/30 scale-105"
+                            : "border-line opacity-70 hover:opacity-100"
+                        }`}
+                      >
+                        <img
+                          src={img}
+                          alt={`${product.title} view ${idx + 1}`}
+                          className="h-full w-full object-cover"
+                        />
+                      </button>
+                    ))}
+                  </div>
                 )}
               </div>
 

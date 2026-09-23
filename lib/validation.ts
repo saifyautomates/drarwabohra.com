@@ -310,6 +310,9 @@ export function sanitizeProduct(
   ) as ProductCategory;
 
   const image = str(b.image, 1000000) || "/images/dr-arwa-bohra.png";
+  const gallery = Array.isArray(b.gallery)
+    ? (b.gallery as unknown[]).map((x) => str(x, 1000000)).filter(Boolean)
+    : undefined;
 
   return ok({
     title,
@@ -325,6 +328,7 @@ export function sanitizeProduct(
     size,
     category,
     image,
+    gallery: gallery && gallery.length > 0 ? gallery : undefined,
     inStock: b.inStock !== false,
     featured: b.featured !== false,
     order: Math.max(0, Math.round(num(b.order, 0))),
