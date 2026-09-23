@@ -1,6 +1,7 @@
 import Link from "next/link";
 import {
   getBookings,
+  getProducts,
   getSchedule,
   getSettings,
   getTestimonials,
@@ -19,6 +20,7 @@ import TestimonialCard from "@/components/site/TestimonialCard";
 import VideoCarousel from "@/components/site/VideoCarousel";
 import FaqAccordion from "@/components/site/FaqAccordion";
 import { buildFaqs } from "@/components/site/faq-data";
+import HomeProducts from "@/components/site/HomeProducts";
 
 export const revalidate = 60;
 
@@ -141,6 +143,7 @@ export default function HomePage() {
   const settings = getSettings();
   const schedule = getSchedule();
   const treatments = getTreatments();
+  const products = getProducts();
   const testimonials = getTestimonials();
   const videos = getVideos().filter((v) => v.active);
   const faqs = buildFaqs(settings).slice(0, 4);
@@ -452,87 +455,12 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ----------------------- OUR BESTSELLERS ----------------------- */}
-      <section className="border-y border-line bg-paper">
-        <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 sm:py-20">
-          <SectionHeading
-            eyebrow="Our Bestsellers"
-            title="Dr. Arwa’s Signature Hair & Face Serums"
-            subline="Pure natural extracts & active homeopathic nourishment — trusted by thousands across India."
-          />
-          <div className="mt-10 grid gap-6 sm:grid-cols-2">
-            {/* Hair Serum */}
-            <div className="card p-6 sm:p-8 flex flex-col justify-between border-2 border-emerald-soft hover:border-emerald-dark/30 transition-colors shadow-sm">
-              <div>
-                <div className="flex items-center justify-between">
-                  <span className="inline-block rounded-full bg-emerald-soft px-3 py-1 text-xs font-semibold text-emerald-dark">
-                    Natural Hair Regrowth &amp; Root Strength
-                  </span>
-                  <span className="text-xs font-bold text-amber-700 bg-amber-50 rounded-full px-2.5 py-0.5 border border-amber-200">
-                    ₹50 OFF with Plan B
-                  </span>
-                </div>
-                <h3 className="mt-3 font-display text-2xl text-ink">Dr. Arwa’s Hair Serum</h3>
-                <div className="mt-2 flex items-baseline gap-2">
-                  <span className="font-display text-3xl font-bold text-ink">₹499</span>
-                  <span className="text-xs text-smoke">+ ₹80 shipping</span>
-                </div>
-                <p className="mt-3 text-sm leading-relaxed text-smoke">
-                  Stops severe hair fall, strengthens root anchors, and stimulates baby hair regrowth. Powered by botanical herbal actives and natural homeopathic tinctures.
-                </p>
-                <ul className="mt-4 space-y-2 text-xs text-ink/80">
-                  <li className="flex items-center gap-2">✓ Natural DHT-blocking nourishment &amp; hair density</li>
-                  <li className="flex items-center gap-2">✓ Non-sticky, lightweight daily scalp application</li>
-                  <li className="flex items-center gap-2">✓ Free of minoxidil, steroids or harsh preservatives</li>
-                </ul>
-              </div>
-              <a
-                href={waLink(settings.whatsapp, "Hi Dr. Arwa, I want to order Dr. Arwa's Hair Serum (₹499 + ₹80 shipping). Please share order & payment details on 7049205128.")}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-primary mt-6 text-center"
-              >
-                Order Hair Serum on WhatsApp →
-              </a>
-            </div>
-
-            {/* Face Serum */}
-            <div className="card p-6 sm:p-8 flex flex-col justify-between border-2 border-gold/30 hover:border-gold transition-colors shadow-sm">
-              <div>
-                <div className="flex items-center justify-between">
-                  <span className="inline-block rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-800">
-                    Clear Glow &amp; Blemish Free Skin
-                  </span>
-                  <span className="text-xs font-bold text-amber-700 bg-amber-50 rounded-full px-2.5 py-0.5 border border-amber-200">
-                    ₹50 OFF with Plan B
-                  </span>
-                </div>
-                <h3 className="mt-3 font-display text-2xl text-ink">Dr. Arwa’s Face Serum</h3>
-                <div className="mt-2 flex items-baseline gap-2">
-                  <span className="font-display text-3xl font-bold text-ink">₹549</span>
-                  <span className="text-xs text-smoke">+ ₹80 shipping</span>
-                </div>
-                <p className="mt-3 text-sm leading-relaxed text-smoke">
-                  Targets stubborn pimples, post-acne pigmentation, melasma spots, and dull complexion. Formulated for safe, soothing cellular repair.
-                </p>
-                <ul className="mt-4 space-y-2 text-xs text-ink/80">
-                  <li className="flex items-center gap-2">✓ Fades stubborn marks, melasma &amp; dark spots</li>
-                  <li className="flex items-center gap-2">✓ Soothes inflamed acne and prevents recurrence</li>
-                  <li className="flex items-center gap-2">✓ 100% gentle homeopathic herbal base</li>
-                </ul>
-              </div>
-              <a
-                href={waLink(settings.whatsapp, "Hi Dr. Arwa, I want to order Dr. Arwa's Face Serum (₹549 + ₹80 shipping). Please share order & payment details on 7049205128.")}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-primary mt-6 text-center"
-              >
-                Order Face Serum on WhatsApp →
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* ----------------------- OUR CLINICAL PRODUCTS ----------------------- */}
+      <HomeProducts
+        products={products}
+        whatsapp={settings.whatsapp}
+        upiNumber={settings.upiNumber}
+      />
 
       {/* ----------------------------- VIDEOS ----------------------------- */}
       {videos.length > 0 && (

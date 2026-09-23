@@ -81,6 +81,28 @@ export interface Testimonial {
   sort: number;
 }
 
+export type ProductCategory = "Hair Care" | "Skin Care" | "Homeopathy" | "Wellness";
+
+export interface Product {
+  id: string; // PRD-####
+  title: string;
+  slug: string;
+  tagline: string;
+  description: string;
+  benefits: string[];
+  howToUse: string;
+  ingredients: string;
+  price: number;
+  originalPrice?: number;
+  size: string;
+  category: ProductCategory;
+  image: string;
+  inStock: boolean;
+  featured: boolean;
+  order: number;
+  createdAt: string;
+}
+
 export interface Booking {
   id: string; // DRB-####
   token: string;
@@ -327,6 +349,27 @@ export function getVideos(): Video[] {
 
 export function saveVideos(list: Video[]) {
   writeJson("videos.json", list);
+}
+
+/* ------------------------------------------------------------------ */
+/* Products — clinical serums, oils, and remedies sold online         */
+/* ------------------------------------------------------------------ */
+
+export function getProducts(): Product[] {
+  const list = readJson<Product[]>("products.json", []);
+  return [...list].sort((a, b) => a.order - b.order);
+}
+
+export function saveProducts(list: Product[]) {
+  writeJson("products.json", list);
+}
+
+export function getProductById(id: string): Product | undefined {
+  return getProducts().find((p) => p.id === id);
+}
+
+export function getProductBySlug(slug: string): Product | undefined {
+  return getProducts().find((p) => p.slug === slug);
 }
 
 /* ------------------------------------------------------------------ */

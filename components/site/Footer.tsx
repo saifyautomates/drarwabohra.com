@@ -4,6 +4,7 @@ import { waLink } from "@/lib/data";
 
 const QUICK_LINKS = [
   { href: "/", label: "Home" },
+  { href: "/products", label: "Our Products" },
   { href: "/treatments", label: "Treatments" },
   { href: "/about", label: "About Dr. Arwa Bohra" },
   { href: "/faq", label: "FAQ" },

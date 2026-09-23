@@ -7,6 +7,8 @@ import type {
   Booking,
   BookingStatus,
   ConsultMode,
+  Product,
+  ProductCategory,
   Schedule,
   Settings,
   Testimonial,
@@ -237,6 +239,105 @@ export function nextVideoId(list: Video[]): string {
     if (m) max = Math.max(max, parseInt(m[1], 10));
   }
   return `VID-${String(max + 1).padStart(3, "0")}`;
+}
+
+/* ------------------------------------------------------------------ */
+
+export function sanitizeProduct(
+  body: unknown
+): Parsed<{
+  title: string;
+  slug: string;
+  tagline: string;
+  description: string;
+  benefits: string[];
+  howToUse: string;
+  ingredients: string;
+  price: number;
+  originalPrice?: number;
+  size: string;
+  category: ProductCategory;
+  image: string;
+  inStock: boolean;
+  featured: boolean;
+  order: number;
+}> {
+  if (typeof body !== "object" || body === null) return fail("Invalid body.");
+  const b = body as Record<string, unknown>;
+  const title = str(b.title, 150);
+  if (!title) return fail("Product title is required.");
+
+  const rawSlug =
+    str(b.slug, 120) ||
+    title
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, "");
+  const slug = rawSlug || "product";
+
+  const tagline = str(b.tagline, 250);
+  const description = str(b.description, 3000);
+  if (!description) return fail("Product description is required.");
+
+  const benefits: string[] = Array.isArray(b.benefits)
+    ? (b.benefits as unknown[]).map((x) => str(x, 200)).filter(Boolean)
+    : str(b.benefits, 2000)
+        .split("\n")
+        .map((s) => s.trim().replace(/^[-*•]\s*/, ""))
+        .filter(Boolean);
+
+  const howToUse = str(b.howToUse, 1500);
+  const ingredients = str(b.ingredients, 1500);
+
+  const price = Math.round(num(b.price, 0));
+  if (price <= 0) return fail("Enter a valid price greater than ₹0.");
+
+  const originalPrice = b.originalPrice
+    ? Math.round(num(b.originalPrice, 0))
+    : undefined;
+  const size = str(b.size, 50) || "Standard";
+
+  const validCategories: ProductCategory[] = [
+    "Hair Care",
+    "Skin Care",
+    "Homeopathy",
+    "Wellness",
+  ];
+  const category = (
+    validCategories.includes(b.category as ProductCategory)
+      ? b.category
+      : "Hair Care"
+  ) as ProductCategory;
+
+  const image = str(b.image, 1000000) || "/images/dr-arwa-bohra.png";
+
+  return ok({
+    title,
+    slug,
+    tagline,
+    description,
+    benefits,
+    howToUse,
+    ingredients,
+    price,
+    originalPrice:
+      originalPrice && originalPrice > price ? originalPrice : undefined,
+    size,
+    category,
+    image,
+    inStock: b.inStock !== false,
+    featured: b.featured !== false,
+    order: Math.max(0, Math.round(num(b.order, 0))),
+  });
+}
+
+export function nextProductId(list: Product[]): string {
+  let max = 0;
+  for (const p of list) {
+    const m = /^PRD-(\d+)$/.exec(p.id);
+    if (m) max = Math.max(max, parseInt(m[1], 10));
+  }
+  return `PRD-${String(max + 1).padStart(4, "0")}`;
 }
 
 /* ------------------------------------------------------------------ */

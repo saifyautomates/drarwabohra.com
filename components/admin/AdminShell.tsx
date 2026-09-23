@@ -22,6 +22,11 @@ const NAV = [
     match: (p: string) => p.startsWith("/admin/treatments"),
   },
   {
+    href: "/admin/products",
+    label: "Products",
+    match: (p: string) => p.startsWith("/admin/products"),
+  },
+  {
     href: "/admin/testimonials",
     label: "Testimonials",
     match: (p: string) => p.startsWith("/admin/testimonials"),

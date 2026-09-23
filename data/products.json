@@ -1,0 +1,74 @@
+[
+  {
+    "id": "PRD-0001",
+    "title": "Dr. Arwa Botanical Hair Regrowth Serum",
+    "slug": "botanical-hair-regrowth-serum",
+    "tagline": "Natural follicle energizer for acute hairfall, thinning & patchy scalp",
+    "description": "Formulated with potent botanical extracts and homeopathic actives, this lightweight non-greasy serum nourishes the roots, stimulates dormant hair follicles, and reduces hair fall within 4-6 weeks of regular application.",
+    "benefits": [
+      "Stops excess hair fall and breakage within 4 weeks",
+      "Stimulates dormant follicles for new baby hair growth",
+      "Improves hair density, thickness and scalp circulation",
+      "100% steroid-free, paraben-free and safe for daily use"
+    ],
+    "howToUse": "Apply 1-2 ml directly on clean, dry scalp using the dropper. Gently massage with fingertips for 2-3 minutes. Leave overnight or for at least 3 hours before washing. Use 4-5 times a week.",
+    "ingredients": "Arnica Montana, Jaborandi, Rosemary Extract, Bhringraj, Redensyl Botanical Complex, Vitamin E, Purified Aqua.",
+    "price": 499,
+    "originalPrice": 699,
+    "size": "50 ml",
+    "category": "Hair Care",
+    "image": "/images/products/hair-serum.jpg",
+    "inStock": true,
+    "featured": true,
+    "order": 1,
+    "createdAt": "2026-09-24T00:00:00.000Z"
+  },
+  {
+    "id": "PRD-0002",
+    "title": "Dr. Arwa Glow & Radiance Face Elixir",
+    "slug": "glow-and-radiance-face-elixir",
+    "tagline": "Advanced antioxidant treatment for hyperpigmentation, dark spots & dull skin",
+    "description": "A clinically curated gentle face elixir that fades stubborn pigmentation, acne marks, and uneven skin tone while imparting a healthy natural glow. Suitable for all skin types, including sensitive and acne-prone skin.",
+    "benefits": [
+      "Visibly fades dark spots, melasma and post-acne blemishes",
+      "Enhances natural skin luminosity and smooth texture",
+      "Protects skin barrier against environmental pollution",
+      "Non-comedogenic, fast absorbing and deeply hydrating"
+    ],
+    "howToUse": "After cleansing, dispense 3-4 drops onto face and neck. Gently pat until absorbed. Follow with your regular moisturizer or sunscreen. Use twice daily (morning & night).",
+    "ingredients": "Berberis Aquifolium Extract, Rosehip Oil, Niacinamide 5%, Licorice Root, Saffron Extract, Hyaluronic Acid.",
+    "price": 549,
+    "originalPrice": 799,
+    "size": "30 ml",
+    "category": "Skin Care",
+    "image": "/images/products/face-serum.jpg",
+    "inStock": true,
+    "featured": true,
+    "order": 2,
+    "createdAt": "2026-09-24T00:00:00.000Z"
+  },
+  {
+    "id": "PRD-0003",
+    "title": "Dr. Arwa Scalp Revitalizing Herbal Hair Oil",
+    "slug": "scalp-revitalizing-herbal-hair-oil",
+    "tagline": "Traditional slow-infused therapeutic oil for deep nourishment & dandruff control",
+    "description": "Prepared by traditional slow decoction of 14 Ayurvedic & Homeopathic herbs in cold-pressed virgin coconut and sesame oils. Eliminates persistent dandruff, soothes itchy scalp, and deeply strengthens hair roots.",
+    "benefits": [
+      "Relieves chronic dandruff and dry flaking scalp",
+      "Strengthens hair shafts from root to tip",
+      "Calms mental stress and promotes deep restful sleep",
+      "Free of mineral oils, artificial fragrances and sulfates"
+    ],
+    "howToUse": "Warm a small quantity of oil between palms. Massage thoroughly into the scalp and along hair strands. Keep on for at least 2 hours or overnight. Wash with a mild herbal shampoo 2-3 times a week.",
+    "ingredients": "Cold Pressed Coconut Oil, Black Sesame Oil, Rosemary, Fenugreek (Methi), Neem, Amla, Brahmi, Camphor.",
+    "price": 399,
+    "originalPrice": 499,
+    "size": "100 ml",
+    "category": "Hair Care",
+    "image": "/images/products/scalp-oil.jpg",
+    "inStock": true,
+    "featured": true,
+    "order": 3,
+    "createdAt": "2026-09-24T00:00:00.000Z"
+  }
+]
