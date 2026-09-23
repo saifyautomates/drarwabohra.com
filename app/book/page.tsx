@@ -47,8 +47,12 @@ export default function BookPage({
     doctorName: settings.doctorName,
     doctorTitle: settings.doctorTitle,
     fees: settings.fees,
+    planAFee: settings.planAFee ?? 2000,
+    planBFee: settings.planBFee ?? 4999,
+    followUpAfter4Weeks: settings.followUpAfter4Weeks ?? 1500,
     phone: settings.phone,
     whatsapp: settings.whatsapp,
+    upiNumber: settings.upiNumber ?? "7049205128",
     address: settings.address,
     mapsLink: settings.mapsLink,
     cancellationPolicy: settings.cancellationPolicy,
@@ -56,9 +60,7 @@ export default function BookPage({
     slotDurationMin: settings.slotDurationMin,
   };
 
-  const initialMode = MODES.includes(searchParams.mode as ConsultMode)
-    ? (searchParams.mode as ConsultMode)
-    : null;
+  const initialMode = "audio" as ConsultMode;
 
   const initialReason = searchParams.reason
     ? (KNOWN_REASONS.find(

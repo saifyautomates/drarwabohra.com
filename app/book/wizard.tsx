@@ -23,14 +23,20 @@ export interface WizardSettings {
   doctorName: string;
   doctorTitle: string;
   fees: Record<ConsultMode, number>;
+  planAFee?: number;
+  planBFee?: number;
+  followUpAfter4Weeks?: number;
   phone: string;
   whatsapp: string;
+  upiNumber?: string;
   address: string;
   mapsLink: string;
   cancellationPolicy: string;
   paymentMode: "pay-at-clinic" | "advance-token";
   slotDurationMin: number;
 }
+
+export type PlanType = "plan-a" | "plan-b";
 
 export interface NextSlot {
   date: string;
@@ -50,7 +56,7 @@ interface Slot {
 }
 
 const STEP_LABELS = [
-  "Mode",
+  "Plan",
   "Concern",
   "Slot",
   "Mobile",
@@ -194,7 +200,8 @@ export default function Wizard({
   const [step, setStep] = useState(1);
   const [error, setError] = useState<string | null>(null);
 
-  const [mode, setMode] = useState<ConsultMode | null>(initialMode);
+  const [plan, setPlan] = useState<PlanType>("plan-a");
+  const [mode, setMode] = useState<ConsultMode>("audio");
   const [reasons, setReasons] = useState<string[]>(
     initialReason ? [initialReason] : []
   );
@@ -427,19 +434,18 @@ export default function Wizard({
   if (confirmed && mode && date && time) {
     const dateLabel = formatDateLabel(date);
     const timeLabel = formatTime12(time);
-    const fee = settings.fees[mode];
+    const fee = plan === "plan-b" ? (settings.planBFee ?? 4999) : (settings.planAFee ?? 2000);
+    const planName = plan === "plan-b" ? "Plan B — Complete Care (3 Months)" : "Plan A — Essential Care (1 Month)";
     const calUrl = googleCalendarUrl({
       title: `Appointment — Dr. Arwa Bohra (${confirmed.id})`,
       date,
       time,
       durationMin: settings.slotDurationMin,
-      details: `Booking ID: ${confirmed.id}\nMode: ${modeLabel(mode)}\nPatient: ${name.trim()}`,
-      location: "Online E-Consultation",
+      details: `Booking ID: ${confirmed.id}\nPlan: ${planName}\nMode: 1:1 Voice Call\nPatient: ${name.trim()}`,
+      location: "Online E-Consultation (Voice Call)",
     });
-    const waConfirm = waLink(
-      settings.whatsapp,
-      bookingWhatsAppText(confirmed.id, modeLabel(mode), dateLabel, timeLabel, name.trim())
-    );
+    const waConfirmText = `Hi Dr. Arwa, I have booked ${planName} (Booking ID: ${confirmed.id}).\nSlot: ${dateLabel}, ${timeLabel}\nPatient: ${name.trim()}.\nHere is my payment receipt for UPI (${settings.upiNumber ?? "7049205128"}).`;
+    const waConfirm = waLink(settings.whatsapp, waConfirmText);
     return (
       <main className="mx-auto max-w-xl px-4 pb-16 pt-8">
         <div className="card p-6 text-center sm:p-8">
@@ -459,7 +465,8 @@ export default function Wizard({
           </p>
           <div className="mt-5 rounded-xl border border-line bg-paper px-4 py-3 text-left text-sm">
             <Row k="Doctor" v={`${settings.doctorName}`} />
-            <Row k="Mode" v={modeLabel(mode)} />
+            <Row k="Plan" v={planName} />
+            <Row k="Consultation" v="1:1 Voice Call" />
             <Row k="Slot" v={`${dateLabel} · ${timeLabel}`} />
             <Row k="Patient" v={`${name.trim()}${forSelf ? "" : ` (${relation})`}, ${age} yrs`} />
             <Row k="Fee" v={formatINR(fee)} last />
@@ -470,13 +477,13 @@ export default function Wizard({
               <span>💳</span> Complete Payment via PhonePe / GPay / Paytm
             </p>
             <p className="mt-1 text-xs text-smoke">
-              Please transfer your consultation fee (Plan A: ₹2,000 / Plan B: ₹4,999) to:
+              Please transfer your consultation fee ({plan === "plan-b" ? "Plan B: ₹4,999" : "Plan A: ₹2,000"}) to:
             </p>
             <div className="my-2.5 rounded-lg bg-paper p-2.5 text-center font-mono font-bold text-lg text-ink border border-line shadow-inner">
-              7049205128
+              {settings.upiNumber ?? "7049205128"}
             </div>
             <p className="text-xs text-smoke">
-              📩 Then share your payment receipt on WhatsApp at <strong>+91 83196 23253</strong> with your Booking ID: <strong>{confirmed.id}</strong>.
+              📩 Then share your payment receipt on WhatsApp at <strong>+91 {settings.phone}</strong> with your Booking ID: <strong>{confirmed.id}</strong>.
             </p>
             <p className="mt-2 text-xs font-semibold text-emerald-dark">
               📞 Dr. Arwa Bohra will connect with you via voice call at your scheduled time.
@@ -506,7 +513,8 @@ export default function Wizard({
 
   const selectedSlots = date ? (daySlots[date] ?? []) : [];
   const selectedStatus = date ? dayStatus(date) : "closed";
-  const fee = mode ? settings.fees[mode] : 0;
+  const fee = plan === "plan-b" ? (settings.planBFee ?? 4999) : (settings.planAFee ?? 2000);
+  const planLabel = plan === "plan-b" ? "Plan B — Complete Care (3 Months)" : "Plan A — Essential Care (1 Month)";
 
   return (
     <main className="mx-auto max-w-xl px-4 pb-28 pt-6">
@@ -536,10 +544,10 @@ export default function Wizard({
       </div>
 
       {/* Sticky summary — steps 5–7 (Doctolib pattern) */}
-      {step >= 5 && mode && (
+      {step >= 5 && (
         <div className="sticky top-[57px] z-20 mb-4 rounded-xl border border-line bg-white px-4 py-2.5 shadow-card">
           <div className="flex items-center justify-between gap-2 text-sm">
-            <span className="font-semibold text-ink">{modeLabel(mode)}</span>
+            <span className="font-semibold text-ink">{plan === "plan-b" ? "Plan B" : "Plan A"} · Voice Call</span>
             <span className="text-smoke">
               {date ? `${formatDateLabel(date)}${time ? ` · ${formatTime12(time)}` : ""}` : "Slot not chosen"}
             </span>
@@ -550,55 +558,193 @@ export default function Wizard({
 
       <ErrorBanner message={error} />
 
-      {/* ---------------- Step 1: Mode ---------------- */}
+      {/* ---------------- Step 1: Choose Your Plan ---------------- */}
       {step === 1 && (
         <section>
-          <h1 className="font-display text-2xl text-ink">How would you like to consult?</h1>
+          <div className="flex items-center justify-between">
+            <span className="rounded-full bg-emerald-soft px-3 py-1 text-xs font-bold uppercase tracking-wider text-emerald-dark">
+              E-Consultation Platform
+            </span>
+            <span className="text-xs font-semibold text-emerald-dark flex items-center gap-1">
+              📞 1:1 Voice Call
+            </span>
+          </div>
+
+          <h1 className="mt-3 font-display text-2xl text-ink sm:text-3xl">
+            Choose Your Healing Plan
+          </h1>
           <p className="mt-1 text-sm text-smoke">
-            Choose voice call or video — all are 1:1 direct consultations with {settings.doctorName}.
+            Welcome to Dr. Arwa Bohra’s E-Consultation Platform! Experience expert homeopathy from home.
           </p>
-          <div className="mt-5 space-y-3">
-            {MODES.map((m) => {
-              const next = nextByMode[m];
-              const active = mode === m;
-              return (
-                <button
-                  key={m}
-                  onClick={() => {
-                    setMode(m);
-                    setError(null);
-                  }}
-                  className={`w-full rounded-2xl border p-4 text-left transition-all ${
-                    active
-                      ? "border-emerald bg-emerald-soft/40 shadow-card"
-                      : "border-line bg-white hover:border-emerald/50"
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <span className={`flex h-11 w-11 items-center justify-center rounded-xl ${active ? "bg-emerald text-white" : "bg-cream text-emerald-dark"}`}>
-                      <ModeIcon mode={m} />
+
+          <div className="mt-5 space-y-4">
+            {/* Plan A */}
+            <div
+              role="button"
+              tabIndex={0}
+              onClick={() => {
+                setPlan("plan-a");
+                setMode("audio");
+                setError(null);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  setPlan("plan-a");
+                  setMode("audio");
+                  setError(null);
+                }
+              }}
+              className={`w-full rounded-2xl border-2 p-5 text-left transition-all cursor-pointer ${
+                plan === "plan-a"
+                  ? "border-emerald bg-emerald-soft/30 shadow-card ring-2 ring-emerald/20"
+                  : "border-line bg-white hover:border-emerald/40"
+              }`}
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex items-center gap-2.5">
+                  <span className={`flex h-5 w-5 items-center justify-center rounded-full border-2 ${
+                    plan === "plan-a" ? "border-emerald bg-emerald" : "border-smoke/40"
+                  }`}>
+                    {plan === "plan-a" && <span className="h-2 w-2 rounded-full bg-white" />}
+                  </span>
+                  <div>
+                    <span className="rounded-full bg-emerald-soft px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider text-emerald-dark">
+                      Plan A · Essential Care
                     </span>
-                    <div className="flex-1">
-                      <p className="font-semibold text-ink">{modeLabel(m)}</p>
-                      <p className="text-xs text-smoke">{MODE_BLURB[m]}</p>
-                    </div>
-                    <p className="text-sm font-bold text-ink">{formatINR(settings.fees[m])}</p>
+                    <h2 className="mt-1 font-display text-xl font-bold text-ink">
+                      Plan A
+                    </h2>
                   </div>
-                  <p className="mt-2 text-xs text-smoke">
-                    {next ? (
-                      <>
-                        Next available:{" "}
-                        <span className="font-semibold text-emerald-dark">
-                          {formatDateLabel(next.date)} · {formatTime12(next.time)}
-                        </span>
-                      </>
-                    ) : (
-                      "No open slots in the next 14 days"
-                    )}
+                </div>
+                <div className="text-right">
+                  <p className="font-display text-2xl font-bold text-ink sm:text-3xl">
+                    ₹2,000
                   </p>
-                </button>
-              );
-            })}
+                  <p className="text-[11px] text-smoke">/ in-depth consultation</p>
+                </div>
+              </div>
+
+              <div className="rule-gold my-3.5" aria-hidden="true" />
+
+              <ul className="space-y-2 text-xs text-ink/85 sm:text-[13px]">
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-dark font-bold">✓</span>
+                  <span><strong>1 in-depth consultation</strong> (via 1:1 voice call)</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-dark font-bold">✓</span>
+                  <span><strong>Personalised medicines</strong>, tailored diet &amp; lifestyle advice</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-dark font-bold">✓</span>
+                  <span><strong>Follow-up within 4 weeks:</strong> <strong className="text-emerald-dark">INCLUDED</strong></span>
+                </li>
+                <li className="flex items-start gap-2 text-smoke">
+                  <span>•</span>
+                  <span>Follow-up after 4 weeks: ₹1,500</span>
+                </li>
+              </ul>
+
+              {nextByMode.audio && (
+                <div className="mt-3.5 flex items-center justify-between border-t border-line/70 pt-2.5 text-xs">
+                  <span className="text-smoke">Next available slot:</span>
+                  <span className="font-semibold text-emerald-dark">
+                    {formatDateLabel(nextByMode.audio.date)} · {formatTime12(nextByMode.audio.time)}
+                  </span>
+                </div>
+              )}
+            </div>
+
+            {/* Plan B */}
+            <div
+              role="button"
+              tabIndex={0}
+              onClick={() => {
+                setPlan("plan-b");
+                setMode("audio");
+                setError(null);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  setPlan("plan-b");
+                  setMode("audio");
+                  setError(null);
+                }
+              }}
+              className={`relative w-full rounded-2xl border-2 p-5 text-left transition-all cursor-pointer ${
+                plan === "plan-b"
+                  ? "border-gold bg-amber-50/50 shadow-card ring-2 ring-gold/30"
+                  : "border-line bg-white hover:border-gold/50"
+              }`}
+            >
+              <div className="absolute -top-3 right-5 rounded-full bg-gradient-to-r from-gold to-amber-600 px-3 py-0.5 text-[11px] font-bold uppercase tracking-wider text-white shadow-sm">
+                Most Recommended · 3 Months
+              </div>
+
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex items-center gap-2.5">
+                  <span className={`flex h-5 w-5 items-center justify-center rounded-full border-2 ${
+                    plan === "plan-b" ? "border-amber-700 bg-amber-700" : "border-smoke/40"
+                  }`}>
+                    {plan === "plan-b" && <span className="h-2 w-2 rounded-full bg-white" />}
+                  </span>
+                  <div>
+                    <span className="rounded-full bg-amber-100 px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider text-amber-800">
+                      Plan B · Complete Care
+                    </span>
+                    <h2 className="mt-1 font-display text-xl font-bold text-ink">
+                      Plan B
+                    </h2>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className="font-display text-2xl font-bold text-ink sm:text-3xl">
+                    ₹4,999
+                  </p>
+                  <p className="text-[11px] text-smoke">/ full 3 months</p>
+                </div>
+              </div>
+
+              <div className="rule-gold my-3.5" aria-hidden="true" />
+
+              <ul className="space-y-2 text-xs text-ink/85 sm:text-[13px]">
+                <li className="flex items-start gap-2">
+                  <span className="text-amber-800 font-bold">✓</span>
+                  <span><strong>1 Consultation + 2 Follow-ups</strong> (over 3 months)</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-amber-800 font-bold">✓</span>
+                  <span><strong>Regular medicine adjustments</strong> as you heal</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-amber-800 font-bold">✓</span>
+                  <span><strong>Custom Healing Routine PDF</strong> (Skin / Hair / Anxiety / Digestion)</span>
+                </li>
+                <li className="flex items-start gap-2 text-amber-900 font-semibold">
+                  <span>🎁</span>
+                  <span>₹50 OFF on Hair or Face Serum</span>
+                </li>
+              </ul>
+
+              {nextByMode.audio && (
+                <div className="mt-3.5 flex items-center justify-between border-t border-line/70 pt-2.5 text-xs">
+                  <span className="text-smoke">Next available slot:</span>
+                  <span className="font-semibold text-emerald-dark">
+                    {formatDateLabel(nextByMode.audio.date)} · {formatTime12(nextByMode.audio.time)}
+                  </span>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Quick Payment & Call Info Strip */}
+          <div className="mt-4 rounded-xl border border-line bg-cream/50 p-3.5 text-xs text-smoke">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <span className="font-medium text-ink flex items-center gap-1.5">
+                <span>💳</span> Pay via PhonePe/GPay/Paytm: <strong className="font-mono text-emerald-dark text-sm">{settings.upiNumber ?? "7049205128"}</strong>
+              </span>
+              <span className="text-smoke">📞 All consultations via Voice Call</span>
+            </div>
           </div>
         </section>
       )}
@@ -647,7 +793,7 @@ export default function Wizard({
         <section>
           <h1 className="font-display text-2xl text-ink">Pick a date &amp; time</h1>
           <p className="mt-1 text-sm text-smoke">
-            {modeLabel(mode)} · {formatINR(settings.fees[mode])} ·{" "}
+            {plan === "plan-b" ? "Plan B (Complete Care · 3 Months)" : "Plan A (Essential Care · 1 Month)"} · 1:1 Voice Call · {formatINR(fee)} ·{" "}
             {settings.slotDurationMin}-minute slots
           </p>
 
@@ -971,19 +1117,20 @@ export default function Wizard({
           </p>
           <div className="card mt-5 p-5">
             <Row k="Doctor" v={`${settings.doctorName} — ${settings.doctorTitle}`} />
-            <Row k="Mode" v={modeLabel(mode)} />
+            <Row k="Plan" v={plan === "plan-b" ? "Plan B — Complete Care (3 Months)" : "Plan A — Essential Care (1 Month)"} />
+            <Row k="Consultation" v="1:1 Direct Voice Call" />
             <Row k="Slot" v={`${formatDateLabel(date)} · ${formatTime12(time)}`} />
             <Row k="Patient" v={`${name.trim()}, ${age} yrs${forSelf ? "" : ` · ${relation}`}`} />
             <Row k="Mobile" v={mobile} />
             <Row k="Concern" v={reasons.join(", ")} />
-            <Row k="Fee" v={formatINR(settings.fees[mode])} last />
+            <Row k="Fee" v={formatINR(fee)} last />
           </div>
           <div className="mt-4 rounded-xl border border-emerald-soft bg-emerald-soft/30 p-4 text-xs leading-relaxed">
             <p className="font-bold text-emerald-dark">
-              💳 UPI Payment (PhonePe / GPay / Paytm): <span className="font-mono text-sm text-ink font-bold">7049205128</span>
+              💳 UPI Payment (PhonePe / GPay / Paytm): <span className="font-mono text-sm text-ink font-bold">{settings.upiNumber ?? "7049205128"}</span>
             </p>
             <p className="mt-1 text-smoke">
-              Please share the payment receipt on WhatsApp at <strong>8319623253</strong> to lock your slot.
+              Please share the payment receipt on WhatsApp at <strong>+91 {settings.phone}</strong> to lock your slot.
             </p>
             <p className="mt-1 text-smoke">
               📞 Consultation is conducted 1:1 via voice call directly with Dr. Arwa Bohra.
