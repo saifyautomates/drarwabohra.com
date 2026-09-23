@@ -606,64 +606,6 @@ export default function AdminDashboard() {
           </div>
         </section>
       )}
-
-      {/* Quick Clinic Management Links */}
-      <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {[
-          {
-            href: "/admin/appointments",
-            title: "Appointments Manager",
-            desc: "Search patients, reschedule, mark visited or cancel bookings.",
-            badge: `${bookings.length} Total`,
-          },
-          {
-            href: "/admin/schedule",
-            title: "Slot & Schedule Grid",
-            desc: "Set weekly voice consultation hours, slot durations, and blocked dates.",
-            badge: "Live Slots",
-          },
-          {
-            href: "/admin/treatments",
-            title: "Treatments Catalog",
-            desc: "Manage skin, hair and chronic ailment therapies shown on site.",
-            badge: "Public Site",
-          },
-          {
-            href: "/admin/testimonials",
-            title: "Patient Testimonials",
-            desc: "Add or publish real patient recovery stories and verified reviews.",
-            badge: "Social Proof",
-          },
-          {
-            href: "/admin/videos",
-            title: "YouTube & Instagram Videos",
-            desc: "Featured video carousel links for educational health guidance.",
-            badge: "439K+ Subs",
-          },
-          {
-            href: "/admin/settings",
-            title: "Clinic & Fee Settings",
-            desc: "Update consultation fees (Plan A / B), UPI payment numbers, and copy.",
-            badge: "Settings",
-          },
-        ].map((q) => (
-          <Link
-            key={q.href}
-            href={q.href}
-            className="card block p-5 transition-all hover:shadow-md hover:border-emerald/40 group"
-          >
-            <div className="flex items-center justify-between">
-              <p className="text-base font-semibold text-ink group-hover:text-emerald-dark transition-colors">
-                {q.title}
-              </p>
-              <span className="rounded-full bg-cream px-2.5 py-0.5 text-[11px] font-bold text-smoke">
-                {q.badge}
-              </span>
-            </div>
-            <p className="mt-2 text-xs text-smoke leading-relaxed">{q.desc}</p>
-          </Link>
-        ))}
-      </section>
     </div>
   );
 }
