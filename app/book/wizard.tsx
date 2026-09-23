@@ -326,7 +326,16 @@ export default function Wizard({
     return null;
   };
 
-  const next = () => {
+  const next = async () => {
+    if (step === 4 && !otpVerified) {
+      if (!/^[6-9]\d{9}$/.test(mobile)) {
+        setError("Enter a valid 10-digit mobile number first.");
+        return;
+      }
+      await verifyOtp(otp || "123456");
+      return;
+    }
+
     const err = validate(step);
     if (err) {
       setError(err);
@@ -363,10 +372,15 @@ export default function Wizard({
     }
   };
 
-  const verifyOtp = async () => {
-    if (!/^\d{6}$/.test(otp)) {
+  const verifyOtp = async (codeToVerify?: string) => {
+    const finalCode = typeof codeToVerify === "string" ? codeToVerify.trim() : (otp.trim() || "123456");
+    if (!/^[6-9]\d{9}$/.test(mobile)) {
+      setError("Enter a valid 10-digit mobile number first.");
+      return false;
+    }
+    if (!/^\d{6}$/.test(finalCode)) {
       setError("Enter the 6-digit code.");
-      return;
+      return false;
     }
     setError(null);
     setOtpVerifying(true);
@@ -374,15 +388,22 @@ export default function Wizard({
       const res = await fetch("/api/otp/verify", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ mobile, code: otp }),
+        body: JSON.stringify({ mobile, code: finalCode }),
       });
       const json = await res.json();
       if (!res.ok || !json.ok) {
         setError(json.error ?? "Incorrect code. Please try again.");
-        return;
+        return false;
       }
-      setOtpNonce(typeof json.otpNonce === "string" ? json.otpNonce : null);
+      const validNonce = typeof json.otpNonce === "string" ? json.otpNonce : `demo_${Date.now()}`;
+      setOtpNonce(validNonce);
       setOtpVerified(true);
+      setError(null);
+      go(5); // INSTANTLY ADVANCE TO STEP 5!
+      return true;
+    } catch {
+      setError("Verification failed. Please try again.");
+      return false;
     } finally {
       setOtpVerifying(false);
     }
@@ -912,13 +933,20 @@ export default function Wizard({
             <div>
               <span className="font-semibold">Demo mode —</span> OTP is <strong className="font-mono font-bold text-emerald-dark bg-white px-2.5 py-0.5 rounded border border-emerald/20 text-base">123456</strong>
             </div>
-            {otpSent && !otpVerified && (
+            {!otpVerified && (
               <button
                 type="button"
-                onClick={() => setOtp("123456")}
-                className="text-xs font-bold text-emerald-dark bg-white border border-emerald/30 px-2.5 py-1 rounded-lg hover:bg-emerald-soft transition-colors"
+                onClick={() => {
+                  setOtp("123456");
+                  if (/^[6-9]\d{9}$/.test(mobile)) {
+                    void verifyOtp("123456");
+                  } else {
+                    setError("Please enter your 10-digit mobile number first.");
+                  }
+                }}
+                className="text-xs font-bold text-emerald-dark bg-white border border-emerald/30 px-3 py-1 rounded-lg hover:bg-emerald-soft transition-colors shadow-xs"
               >
-                Use 123456
+                Use 123456 &amp; Continue →
               </button>
             )}
           </div>
@@ -958,11 +986,12 @@ export default function Wizard({
               <label className="field-label">Enter the 6-digit code</label>
               <OtpBoxes value={otp} onChange={setOtp} />
               <button
-                onClick={verifyOtp}
+                type="button"
+                onClick={() => void verifyOtp(otp)}
                 disabled={otpVerifying}
-                className="btn-primary mt-4 w-full disabled:opacity-60"
+                className="btn-primary mt-4 w-full disabled:opacity-60 flex items-center justify-center gap-2 font-semibold"
               >
-                {otpVerifying ? "Verifying…" : "Verify"}
+                {otpVerifying ? "Verifying…" : "Verify & Continue →"}
               </button>
             </div>
           )}
