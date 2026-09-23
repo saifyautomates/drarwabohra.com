@@ -50,6 +50,7 @@ export interface Settings {
   followUpAfter4Weeks?: number;
   hairSerumPrice?: number;
   faceSerumPrice?: number;
+  hairoilPrice?: number;
   shippingCharge?: number;
 }
 
