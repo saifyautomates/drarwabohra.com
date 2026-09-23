@@ -1,0 +1,39 @@
+[
+  {
+    "mode": "in-clinic",
+    "reasons": [
+      "Hairfall"
+    ],
+    "date": "2026-09-26",
+    "time": "11:40",
+    "name": "saif",
+    "age": 23,
+    "gender": "Male",
+    "forSelf": true,
+    "mobile": "7014098198",
+    "complaint": "hairfall ho rha h",
+    "medicines": "nil",
+    "id": "DRB-0001",
+    "token": "U4HNC2",
+    "createdAt": "2026-09-23T20:15:42.197Z",
+    "status": "confirmed"
+  },
+  {
+    "mode": "in-clinic",
+    "reasons": [
+      "Acne & Pimples"
+    ],
+    "date": "2026-09-24",
+    "time": "10:00",
+    "name": "Priya Sharma",
+    "age": 28,
+    "gender": "Female",
+    "forSelf": true,
+    "mobile": "9876543210",
+    "complaint": "Acne on cheeks for 3 months",
+    "id": "DRB-0002",
+    "token": "TTX8MP",
+    "createdAt": "2026-09-23T20:57:06.815Z",
+    "status": "cancelled"
+  }
+]

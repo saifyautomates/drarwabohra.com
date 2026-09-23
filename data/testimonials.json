@@ -1,0 +1,34 @@
+[
+  {
+    "id": "TST-001",
+    "name": "Pooja Sharma",
+    "treatment": "Hair Fall & Natural Hair Regrowth",
+    "text": "I followed Dr. Arwa's Jaborandi Q protocol along with her 1:1 consultation. Within 2 months, my severe post-Covid hair fall stopped completely and baby hair started growing back!",
+    "sample": false,
+    "sort": 1
+  },
+  {
+    "id": "TST-002",
+    "name": "Aman Verma",
+    "treatment": "Seborrheic Dermatitis & Sticky Dandruff",
+    "text": "Had oily sticky dandruff and itchy scalp for 3 years. Allopathic anti-dandruff shampoos only worked for a few days. Dr. Arwa's homeopathic remedy cured the itching and redness from the root.",
+    "sample": false,
+    "sort": 2
+  },
+  {
+    "id": "TST-003",
+    "name": "Meera Rathore",
+    "treatment": "Pigmentation, Melasma & Dark Spots",
+    "text": "I was suffering from postpartum melasma on both cheeks. Dr. Arwa gave me a customized remedy and simple daily care tips. My dark patches lightened noticeably in 8 weeks.",
+    "sample": false,
+    "sort": 3
+  },
+  {
+    "id": "TST-004",
+    "name": "Kavita Jain",
+    "treatment": "Acne, Pimples & Clear Skin",
+    "text": "Her recommendation of Berberis Aquifolium and individualized homeopathy cleared my recurring hormonal breakouts. My skin feels healthier and calmer without any side effects.",
+    "sample": false,
+    "sort": 4
+  }
+]

@@ -1,0 +1,86 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+  --paper: #fbfaf8;
+  --ink: #1a1a1a;
+  --emerald: #0e5e4a;
+  --gold: #c9a24b;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-paper text-ink font-sans antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+::selection {
+  background: #0e5e4a;
+  color: #fff;
+}
+
+/* Gold rule used under section eyebrows — tiny gold accents only */
+.rule-gold {
+  @apply h-[2px] w-10 bg-gold;
+}
+
+/* Card surface — flat, no gradients */
+.card {
+  @apply rounded-2xl border border-line bg-white shadow-card;
+}
+
+/* Hide scrollbars on swipeable tracks (swipe still works) */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Primary CTA — deep emerald, no gradients */
+.btn-primary {
+  @apply inline-flex items-center justify-center rounded-xl bg-emerald px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-emerald-dark active:bg-emerald-deep;
+}
+
+.btn-outline {
+  @apply inline-flex items-center justify-center rounded-xl border border-line bg-white px-4 py-2.5 text-sm font-semibold text-ink transition-colors hover:border-emerald hover:text-emerald-dark;
+}
+
+/* Form controls */
+.field-label {
+  @apply mb-1.5 block text-sm font-medium text-ink;
+}
+
+.input {
+  @apply w-full rounded-xl border border-line bg-white px-3.5 py-2.5 text-sm text-ink placeholder:text-smoke/60 outline-none transition-colors focus:border-emerald focus:ring-2 focus:ring-emerald/15;
+}
+
+textarea.input {
+  resize: vertical;
+}
+
+/* Availability / status badges */
+.badge {
+  @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold;
+}
+.badge-open {
+  @apply bg-emerald-soft text-emerald-dark;
+}
+.badge-closed {
+  @apply bg-cream text-smoke;
+}
+.badge-sample {
+  @apply bg-gold-soft text-gold-dark;
+}

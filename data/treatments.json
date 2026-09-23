@@ -1,0 +1,58 @@
+[
+  {
+    "id": "TRT-001",
+    "slug": "hairfall-hair-thinning",
+    "sort": 1,
+    "title": "Hair Fall & Natural Hair Regrowth",
+    "desc": "Specialized protocols featuring Jaborandi Q, root-strengthening Mother Tinctures, and diet guidance to stop hair loss, stimulate new follicles, and treat alopecia."
+  },
+  {
+    "id": "TRT-002",
+    "slug": "acne-pimples",
+    "sort": 2,
+    "title": "Acne, Pimples & Clear Skin",
+    "desc": "Holistic treatment for cystic acne, stubborn breakouts, and post-acne marks using Berberis Aquifolium and individualized constitutional remedies."
+  },
+  {
+    "id": "TRT-003",
+    "slug": "pigmentation-dark-spots",
+    "sort": 3,
+    "title": "Pigmentation, Melasma & Dark Spots",
+    "desc": "Gentle, non-bleaching homeopathic solutions for uneven skin tone, hormonal melasma, and stubborn hyperpigmentation without harsh peeling agents."
+  },
+  {
+    "id": "TRT-004",
+    "slug": "dandruff-scalp-care",
+    "sort": 4,
+    "title": "Seborrheic Dermatitis & Sticky Dandruff",
+    "desc": "Targeted remedies for chronic oily flaking, itchy fungal buildup, and sensitive scalp conditions with holistic hygiene routines."
+  },
+  {
+    "id": "TRT-005",
+    "slug": "grey-hair-reversal",
+    "sort": 5,
+    "title": "Premature Greying & Grey Hair Protocols",
+    "desc": "Natural homeopathic support for age 20-60 to nourish hair melanin at the roots and avoid damaging chemical dyes."
+  },
+  {
+    "id": "TRT-006",
+    "slug": "eczema-fungal-infections",
+    "sort": 6,
+    "title": "Eczema, Fungal Infections & Ringworm",
+    "desc": "Root-cause homeopathic cure for persistent dad, khujli, fungal patches, and skin allergies without steroid rebound."
+  },
+  {
+    "id": "TRT-007",
+    "slug": "energy-weakness-nerve-care",
+    "sort": 7,
+    "title": "Fatigue, Weakness & Nerve Relief",
+    "desc": "Proven mother tincture combinations for chronic tiredness, low stamina, and burning/tingling sensations in hands and feet."
+  },
+  {
+    "id": "TRT-008",
+    "slug": "chronic-homeopathic-consult",
+    "sort": 8,
+    "title": "Constitutional Homeopathic Consultation",
+    "desc": "In-depth case analysis for long-standing chronic ailments — joint pains, sciatica, gastric problems, stress, and lifestyle disorders."
+  }
+]
