@@ -115,12 +115,16 @@ export default function AdminShell({
       <header className="sticky top-0 z-30 border-b border-line bg-white/95 backdrop-blur shadow-xs">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
           <div className="flex items-center gap-3">
-            <Link href="/admin" className="flex items-center gap-2.5">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald text-white font-display text-lg font-bold shadow-sm">
-                A
-              </span>
+            <Link href="/admin" className="flex items-center gap-3 group">
+              <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-full border-2 border-emerald shadow-xs transition-transform group-hover:scale-105 ring-2 ring-emerald/20">
+                <img
+                  src="/images/dr-arwa-bohra.png"
+                  alt="Dr. Arwa Bohra"
+                  className="h-full w-full object-cover object-top"
+                />
+              </div>
               <div>
-                <span className="block font-display text-base sm:text-lg font-bold text-ink leading-tight">
+                <span className="block font-display text-base sm:text-lg font-bold text-ink leading-tight group-hover:text-emerald-dark transition-colors">
                   Dr. Arwa Bohra
                 </span>
                 <span className="block text-[11px] font-semibold text-emerald-dark tracking-wide">

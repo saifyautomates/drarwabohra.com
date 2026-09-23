@@ -27,10 +27,21 @@ export default function AdminLogin() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-paper px-4">
       <div className="card w-full max-w-sm p-8">
-        <div className="rule-gold mb-4" />
-        <h1 className="font-display text-2xl text-ink">Clinic Admin</h1>
-        <p className="mt-1.5 text-sm text-smoke">
-          Sign in to manage appointments, schedule and settings.
+        <div className="flex items-center gap-3.5 mb-5 pb-4 border-b border-line">
+          <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full border-2 border-emerald shadow-xs ring-2 ring-emerald/20">
+            <img
+              src="/images/dr-arwa-bohra.png"
+              alt="Dr. Arwa Bohra"
+              className="h-full w-full object-cover object-top"
+            />
+          </div>
+          <div>
+            <h1 className="font-display text-lg font-bold text-ink leading-tight">Dr. Arwa Bohra</h1>
+            <p className="text-xs font-semibold text-emerald-dark">Clinical Admin Portal</p>
+          </div>
+        </div>
+        <p className="text-sm text-smoke">
+          Sign in to manage appointments, products, schedule and clinic settings.
         </p>
         <form onSubmit={onSubmit} className="mt-6 space-y-4">
           <label className="block">
