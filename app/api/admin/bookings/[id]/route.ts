@@ -4,6 +4,7 @@ import {
   getBookings,
   getSchedule,
   updateBooking,
+  deleteBooking,
   type Booking,
 } from "@/lib/data";
 import { sanitizeBookingPatch } from "@/lib/validation";
@@ -63,4 +64,32 @@ export async function PUT(
   revalidatePath("/admin/appointments");
 
   return NextResponse.json({ ok: true, booking: updated });
+}
+
+export async function DELETE(
+  _req: Request,
+  { params }: { params: { id: string } }
+) {
+  const denied = deny();
+  if (denied) return denied;
+
+  const existing = getBookings().find((b) => b.id === params.id);
+  if (!existing) {
+    return NextResponse.json({ error: "Booking not found." }, { status: 404 });
+  }
+
+  const deleted = deleteBooking(params.id);
+  if (!deleted) {
+    return NextResponse.json(
+      { error: "Failed to delete booking." },
+      { status: 500 }
+    );
+  }
+
+  revalidatePath("/");
+  revalidatePath("/book");
+  revalidatePath("/admin");
+  revalidatePath("/admin/appointments");
+
+  return NextResponse.json({ ok: true });
 }

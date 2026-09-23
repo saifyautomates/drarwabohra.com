@@ -65,6 +65,26 @@ export default function AppointmentsClient({
   const setStatus = (id: string, status: BookingStatus) =>
     update(id, { status });
 
+  async function remove(id: string) {
+    if (
+      !window.confirm(
+        `Permanently delete booking ${id}? This cannot be undone.`
+      )
+    ) {
+      return;
+    }
+    setBusyId(id);
+    setError(null);
+    const res = await api<{ ok: boolean }>(`/api/admin/bookings/${id}`, "DELETE");
+    setBusyId(null);
+    if (!res.ok) {
+      setError(res.error ?? "Failed to delete booking.");
+      return;
+    }
+    setBookings((prev) => prev.filter((b) => b.id !== id));
+    router.refresh();
+  }
+
   function openReschedule(b: Booking) {
     setResched(b);
     setRsMode(b.mode);
@@ -241,12 +261,27 @@ export default function AppointmentsClient({
                               )
                                 setStatus(b.id, "cancelled");
                             }}
-                            tone="danger"
                           >
                             Cancel
                           </ActionBtn>
                         </>
                       )}
+                      {b.status !== "pending" && b.status !== "confirmed" && (
+                        <ActionBtn
+                          busy={busyId === b.id}
+                          onClick={() => setStatus(b.id, "pending")}
+                          tone="go"
+                        >
+                          Reopen
+                        </ActionBtn>
+                      )}
+                      <ActionBtn
+                        busy={busyId === b.id}
+                        onClick={() => remove(b.id)}
+                        tone="danger"
+                      >
+                        Delete
+                      </ActionBtn>
                     </div>
                   </td>
                 </tr>

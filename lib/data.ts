@@ -448,6 +448,14 @@ export function updateBooking(
   return updated;
 }
 
+export function deleteBooking(id: string): boolean {
+  const list = readJson<Booking[]>("bookings.json", []);
+  const next = list.filter((b) => b.id !== id);
+  if (next.length === list.length) return false;
+  writeJson("bookings.json", next);
+  return true;
+}
+
 /* ------------------------------------------------------------------ */
 /* OTP verification nonces (single-use, 10-minute expiry)              */
 /* Minted by POST /api/otp/verify on successful verification;          */
