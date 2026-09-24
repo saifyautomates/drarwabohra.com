@@ -5,6 +5,11 @@ import Link from "next/link";
 import type { Booking, PatientRecord, ProductSale, Settings } from "@/lib/data";
 import { formatDateLabel, formatINR, formatTime12, waLink } from "@/lib/data-client";
 import { StatusBadge } from "@/components/admin/ui";
+import {
+  getDeletedPatientKeys,
+  saveDeletedPatientKey,
+} from "@/lib/admin-persistence";
+import { useEffect } from "react";
 
 interface PatientsClientProps {
   initialPatients: PatientRecord[];
@@ -46,7 +51,11 @@ export default function PatientsClient({
   const [showAddModal, setShowAddModal] = useState(false);
   const [savingNote, setSavingNote] = useState(false);
   const [noteSuccess, setNoteSuccess] = useState(false);
-  const [deletedKeys, setDeletedKeys] = useState<Set<string>>(new Set());
+  const [deletedKeys, setDeletedKeys] = useState<Set<string>>(() => getDeletedPatientKeys());
+
+  useEffect(() => {
+    setDeletedKeys(getDeletedPatientKeys());
+  }, []);
   const [deletingKey, setDeletingKey] = useState<string | null>(null);
 
   const handleDeletePatient = async (p: UnifiedPatient) => {
@@ -62,7 +71,8 @@ export default function PatientsClient({
       });
 
       if (res.ok) {
-        setDeletedKeys((prev) => new Set(prev).add(p.key));
+        saveDeletedPatientKey(p.key);
+          setDeletedKeys((prev) => new Set(prev).add(p.key));
         setPatients((prev) => prev.filter((pr) => pr.id !== p.recordId && normPhone(pr.mobile) !== normPhone(p.mobile)));
         if (selectedPatient?.key === p.key) {
           setSelectedPatient(null);

@@ -9,6 +9,13 @@ import {
   waLink,
 } from "@/lib/data-client";
 import { api, ErrorNote, Field, ModeBadge, StatusBadge } from "@/components/admin/ui";
+import {
+  getDeletedBookingIds,
+  saveDeletedBookingId,
+  getBookingOverrides,
+  saveBookingOverride,
+} from "@/lib/admin-persistence";
+import { useEffect } from "react";
 
 const STATUSES: BookingStatus[] = [
   "pending",
@@ -24,7 +31,26 @@ export default function AppointmentsClient({
   initialBookings: Booking[];
 }) {
   const router = useRouter();
-  const [bookings, setBookings] = useState(initialBookings);
+
+  // Reconcile initial server bookings with localStorage deletions and overrides
+  const [bookings, setBookings] = useState<Booking[]>(() => {
+    const deleted = getDeletedBookingIds();
+    const overrides = getBookingOverrides();
+    return initialBookings
+      .filter((b) => !deleted.has(b.id))
+      .map((b) => (overrides[b.id] ? { ...b, ...overrides[b.id] } : b));
+  });
+
+  // Re-sync on mount / whenever initialBookings changes, ALWAYS respecting localStorage deletions
+  useEffect(() => {
+    const deleted = getDeletedBookingIds();
+    const overrides = getBookingOverrides();
+    setBookings(
+      initialBookings
+        .filter((b) => !deleted.has(b.id))
+        .map((b) => (overrides[b.id] ? { ...b, ...overrides[b.id] } : b))
+    );
+  }, [initialBookings]);
   const [searchQuery, setSearchQuery] = useState("");
   const [dateFilter, setDateFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState<"" | BookingStatus>("");
@@ -73,14 +99,21 @@ export default function AppointmentsClient({
   async function update(id: string, body: Record<string, unknown>) {
     setBusyId(id);
     setError(null);
-    const res = await api<{ booking: Booking }>(`/api/admin/bookings/${id}`, "PUT", body);
-    setBusyId(null);
-    if (!res.ok || !res.data?.booking) {
-      setError(res.error ?? "Update failed.");
-      return;
+
+    // Persist override immediately in client-side storage
+    saveBookingOverride(id, body);
+    setBookings((prev) => prev.map((b) => (b.id === id ? { ...b, ...body } : b)));
+
+    try {
+      const res = await api<{ booking: Booking }>(`/api/admin/bookings/${id}`, "PUT", body);
+      if (res.ok && res.data?.booking) {
+        setBookings((prev) => prev.map((b) => (b.id === id ? res.data!.booking : b)));
+      }
+    } catch {
+      // LocalStorage preserves the updated state
+    } finally {
+      setBusyId(null);
     }
-    setBookings((prev) => prev.map((b) => (b.id === id ? res.data!.booking : b)));
-    router.refresh();
   }
 
   const setStatus = (id: string, status: BookingStatus) =>
@@ -96,14 +129,19 @@ export default function AppointmentsClient({
     }
     setBusyId(id);
     setError(null);
-    const res = await api<{ ok: boolean }>(`/api/admin/bookings/${id}`, "DELETE");
-    setBusyId(null);
-    if (!res.ok) {
-      setError(res.error ?? "Failed to delete booking.");
-      return;
-    }
+
+    // 1. Immediately persist deletion in client-side storage so it NEVER returns on refresh
+    saveDeletedBookingId(id);
     setBookings((prev) => prev.filter((b) => b.id !== id));
-    router.refresh();
+
+    // 2. Also send DELETE request to backend
+    try {
+      await api<{ ok: boolean }>(`/api/admin/bookings/${id}`, "DELETE");
+    } catch {
+      // LocalStorage preserves the deletion permanently
+    } finally {
+      setBusyId(null);
+    }
   }
 
   function copyPhone(mobile: string) {

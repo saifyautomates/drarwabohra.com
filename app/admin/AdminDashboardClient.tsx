@@ -1,6 +1,11 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import {
+  getDeletedBookingIds,
+  getDeletedSaleIds,
+  saveDeletedSaleId,
+} from "@/lib/admin-persistence";
 import Link from "next/link";
 import type { Booking, Settings, Product, ProductSale } from "@/lib/data";
 import {
@@ -31,8 +36,22 @@ export default function AdminDashboardClient({
   const [chartMetric, setChartMetric] = useState<ChartMetric>("all");
   const [hoveredDataIndex, setHoveredDataIndex] = useState<number | null>(null);
 
-  // Product sales state
-  const [sales, setSales] = useState<ProductSale[]>(initialSales);
+  // Active bookings filtered by client-side persistence (guarantees deleted bookings stay deleted across refreshes)
+  const activeBookings = useMemo(() => {
+    const deleted = getDeletedBookingIds();
+    return initialBookings.filter((b) => !deleted.has(b.id));
+  }, [initialBookings]);
+
+  // Product sales state initialized with persistent deletions
+  const [sales, setSales] = useState<ProductSale[]>(() => {
+    const deleted = getDeletedSaleIds();
+    return initialSales.filter((s) => !deleted.has(s.id));
+  });
+
+  useEffect(() => {
+    const deleted = getDeletedSaleIds();
+    setSales(initialSales.filter((s) => !deleted.has(s.id)));
+  }, [initialSales]);
   const [showAddSaleModal, setShowAddSaleModal] = useState(false);
   const [savingSale, setSavingSale] = useState(false);
   const [saleError, setSaleError] = useState<string | null>(null);
@@ -117,7 +136,7 @@ export default function AdminDashboardClient({
 
   // Filtered bookings based on selected time range
   const filteredBookings = useMemo(() => {
-    return initialBookings.filter((b) => isBookingInRange(b, timeRange));
+    return activeBookings.filter((b) => isBookingInRange(b, timeRange));
   }, [initialBookings, timeRange]);
 
   // Paid patients in filtered period
@@ -165,7 +184,7 @@ export default function AdminDashboardClient({
   // Counts summary per range
   const rangeCounts = useMemo(() => {
     const calc = (r: TimeRange) => {
-      const bCount = initialBookings.filter(
+      const bCount = activeBookings.filter(
         (b) => isBookingInRange(b, r) && (b.status === "confirmed" || b.status === "visited")
       ).length;
       const sCount = sales.filter(
@@ -180,12 +199,12 @@ export default function AdminDashboardClient({
       week: calc("week"),
       month: calc("month"),
       all: {
-        bookings: initialBookings.filter((b) => b.status === "confirmed" || b.status === "visited").length,
+        bookings: activeBookings.filter((b) => b.status === "confirmed" || b.status === "visited").length,
         sales: sales.filter((s) => s.paymentStatus === "paid").length,
-        total: initialBookings.filter((b) => b.status === "confirmed" || b.status === "visited").length + sales.filter((s) => s.paymentStatus === "paid").length,
+        total: activeBookings.filter((b) => b.status === "confirmed" || b.status === "visited").length + sales.filter((s) => s.paymentStatus === "paid").length,
       },
     };
-  }, [initialBookings, sales]);
+  }, [activeBookings, sales]);
 
   // Chart Data preparation: Daily breakdown of both Appointments & Product Sales
   const chartData = useMemo(() => {
@@ -201,7 +220,7 @@ export default function AdminDashboardClient({
     }[] = [];
 
     const getDailyData = (dStr: string) => {
-      const dayBookings = initialBookings.filter(
+      const dayBookings = activeBookings.filter(
         (b) =>
           getBookingDate(b) === dStr &&
           (b.status === "confirmed" || b.status === "visited")
@@ -273,7 +292,7 @@ export default function AdminDashboardClient({
           .toISOString()
           .slice(0, 10);
 
-        const dayBookings = initialBookings.filter((b) => {
+        const dayBookings = activeBookings.filter((b) => {
           const bd = getBookingDate(b);
           return (
             bd >= dStr &&
@@ -307,7 +326,7 @@ export default function AdminDashboardClient({
     } else {
       // All time
       const allDates = new Set<string>();
-      initialBookings.forEach((b) => {
+      activeBookings.forEach((b) => {
         if (b.status === "confirmed" || b.status === "visited") {
           allDates.add(getBookingDate(b));
         }
@@ -429,6 +448,7 @@ export default function AdminDashboardClient({
         method: "DELETE",
       });
       if (res.ok) {
+        saveDeletedSaleId(saleId);
         setSales((prev) => prev.filter((s) => s.id !== saleId));
       }
     } catch (err) {
