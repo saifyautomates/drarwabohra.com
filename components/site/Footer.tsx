@@ -102,11 +102,26 @@ export default function Footer({ settings }: { settings: Settings }) {
       </div>
 
       <div className="border-t border-line">
-        <div className="mx-auto flex max-w-6xl flex-col gap-1 px-4 py-5 text-xs text-smoke sm:flex-row sm:items-center sm:justify-between sm:px-6">
+        <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-5 text-xs text-smoke sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <p>
             © {year} Dr. Arwa Bohra. All rights reserved.
           </p>
-          <p>Online Homeopathy E-Consultation Platform.</p>
+          <div className="flex flex-wrap items-center gap-2 sm:gap-4">
+            <p>Online Homeopathy E-Consultation Platform.</p>
+            <span className="hidden sm:inline text-smoke/40">•</span>
+            <p>
+              Developed by{" "}
+              <a
+                href="https://wa.me/917014098198?text=Hello%20Saify%20Automates%2C%20I%20am%20interested%20in%20website%20and%20automation%20development."
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-bold text-emerald-dark hover:text-emerald hover:underline transition-colors inline-flex items-center gap-1 cursor-pointer"
+              >
+                <span>Saify Automates</span>
+                <span className="text-[11px]">↗</span>
+              </a>
+            </p>
+          </div>
         </div>
       </div>
     </footer>
