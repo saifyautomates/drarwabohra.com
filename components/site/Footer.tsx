@@ -112,16 +112,35 @@ export default function Footer({ settings }: { settings: Settings }) {
             </p>
           </div>
 
-          <div className="flex items-center gap-1.5 text-xs text-ink/90 pt-1 sm:pt-0">
-            <span>Developed by</span>
+          <div className="flex flex-wrap items-center gap-2 text-xs text-smoke pt-1 sm:pt-0">
+            <span className="text-smoke/90 font-medium">Developed by</span>
+
+            {/* Option 1: Website */}
+            <a
+              href="https://saifyautomates.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 font-bold text-emerald-dark hover:text-emerald hover:underline transition-all bg-emerald-50 hover:bg-emerald-100/70 px-2.5 py-1 rounded-md border border-emerald-200/80 active:scale-95 shadow-2xs"
+              title="Visit Saify Automates"
+            >
+              <span>Saify Automates</span>
+              <span className="text-[11px] font-normal">↗</span>
+            </a>
+
+            <span className="text-smoke/40">•</span>
+
+            {/* Option 2: WhatsApp Number */}
             <a
               href="https://wa.me/917014098198?text=Hello%20Saify%20Automates%2C%20I%20am%20interested%20in%20website%20and%20automation%20development."
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 font-bold text-emerald-dark hover:text-emerald hover:underline transition-colors bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-200/80 cursor-pointer active:scale-95"
+              className="inline-flex items-center gap-1.5 font-semibold text-[#128C7E] hover:text-[#075E54] hover:underline transition-all bg-[#25D366]/10 hover:bg-[#25D366]/20 px-2.5 py-1 rounded-md border border-[#25D366]/30 active:scale-95 shadow-2xs"
+              title="Chat with Saify Automates on WhatsApp"
             >
-              <span>Saify Automates</span>
-              <span className="text-[12px] font-normal">↗</span>
+              <svg className="h-3.5 w-3.5 fill-[#25D366]" viewBox="0 0 24 24">
+                <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.87 9.87 0 0 0 4.74 1.21c5.46 0 9.91-4.45 9.91-9.91C21.95 6.45 17.5 2 12.04 2Zm0 18.15a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.24-8.24 4.54 0 8.24 3.7 8.24 8.24 0 4.54-3.7 8.24-8.24 8.24Zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.24-.64.8-.78.97-.14.16-.29.18-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.24-.01-.38.11-.5.11-.11.25-.29.37-.43.12-.14.16-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.41-.42-.56-.43h-.48c-.17 0-.43.06-.66.31-.22.24-.86.85-.86 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.14-1.18-.06-.1-.22-.16-.47-.29Z" />
+              </svg>
+              <span>+91 7014098198</span>
             </a>
           </div>
         </div>
