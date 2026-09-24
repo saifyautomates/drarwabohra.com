@@ -557,92 +557,132 @@ export default function AdminDashboardClient({
         </div>
       </div>
 
-      {/* ------------------- Primary KPI Stat Cards ------------------- */}
+      {/* ------------------- Primary KPI Stat Cards (Super Colorful) ------------------- */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {/* Total Clinic Revenue */}
-        <div className="card relative overflow-hidden p-5 sm:p-6 shadow-md border-2 border-gold/40 bg-gradient-to-br from-paper via-white to-amber-50/30">
+        {/* Card 1: Total Clinic Revenue (Vibrant Emerald & Teal) */}
+        <div className="group relative overflow-hidden rounded-3xl border-2 border-emerald-300/80 bg-gradient-to-br from-white via-emerald-50/60 to-teal-100/40 p-5 sm:p-6 shadow-md transition-all duration-300 hover:shadow-xl hover:shadow-emerald-500/20 hover:-translate-y-1">
+          {/* Glowing background aura */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-emerald-400/20 blur-2xl group-hover:scale-125 transition-transform"
+          />
+
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-amber-800">
+            <span className="text-xs font-black uppercase tracking-wider text-emerald-900">
               Total Revenue ({timeRange === "all" ? "All Time" : timeRange})
             </span>
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gold/20 text-amber-800 font-bold text-base">
+            <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-tr from-emerald-800 to-teal-500 text-white font-bold text-lg shadow-md shadow-emerald-700/30 group-hover:rotate-6 transition-transform">
               💎
             </span>
           </div>
-          <p className="mt-3 font-display text-3xl font-extrabold text-ink sm:text-4xl">
+
+          <p className="mt-3 font-display text-3xl font-black bg-gradient-to-r from-emerald-950 via-emerald-800 to-teal-700 bg-clip-text text-transparent sm:text-4xl">
             {formatINR(totalClinicRevenue)}
           </p>
-          <div className="mt-2.5 flex flex-wrap items-center gap-2 text-xs">
-            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-soft px-2 py-0.5 font-bold text-emerald-dark text-[11px]">
+
+          <div className="mt-3 flex flex-wrap items-center gap-1.5 pt-2 border-t border-emerald-200/60 text-xs">
+            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100/90 px-2.5 py-0.5 font-extrabold text-emerald-900 text-[11px] border border-emerald-300/50 shadow-xs">
               🩺 {formatINR(totalAppointmentEarnings)}
             </span>
-            <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 font-bold text-amber-800 text-[11px]">
+            <span className="inline-flex items-center gap-1 rounded-full bg-amber-100/90 px-2.5 py-0.5 font-extrabold text-amber-900 text-[11px] border border-amber-300/50 shadow-xs">
               🧴 {formatINR(totalProductEarnings)}
             </span>
           </div>
         </div>
 
-        {/* Consultation Earning */}
-        <div className="card p-5 sm:p-6 shadow-sm border border-emerald/30 bg-paper">
+        {/* Card 2: Consultations Earning (Vibrant Electric Cyan & Sapphire Blue) */}
+        <div className="group relative overflow-hidden rounded-3xl border-2 border-cyan-300/80 bg-gradient-to-br from-white via-cyan-50/60 to-blue-100/40 p-5 sm:p-6 shadow-md transition-all duration-300 hover:shadow-xl hover:shadow-cyan-500/20 hover:-translate-y-1">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-cyan-400/20 blur-2xl group-hover:scale-125 transition-transform"
+          />
+
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-emerald-dark">
+            <span className="text-xs font-black uppercase tracking-wider text-cyan-900">
               Consultations Earning
             </span>
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-soft text-emerald-dark font-bold text-base">
+            <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-tr from-cyan-700 via-blue-600 to-indigo-600 text-white font-bold text-lg shadow-md shadow-blue-700/30 group-hover:rotate-6 transition-transform">
               🩺
             </span>
           </div>
-          <p className="mt-3 font-display text-3xl font-extrabold text-ink sm:text-4xl">
+
+          <p className="mt-3 font-display text-3xl font-black bg-gradient-to-r from-cyan-950 via-blue-800 to-indigo-800 bg-clip-text text-transparent sm:text-4xl">
             {formatINR(totalAppointmentEarnings)}
           </p>
-          <p className="mt-2.5 text-xs text-smoke font-medium">
-            <strong>{paidBookings.length}</strong> patient consultations confirmed / visited
-          </p>
+
+          <div className="mt-3 flex items-center justify-between pt-2 border-t border-cyan-200/60 text-xs text-cyan-900">
+            <span className="font-semibold text-[11px]">
+              <strong>{paidBookings.length}</strong> patient consults confirmed
+            </span>
+            <Link
+              href="/admin/appointments"
+              className="text-[11px] font-extrabold text-blue-700 hover:underline"
+            >
+              View →
+            </Link>
+          </div>
         </div>
 
-        {/* Product Sales Earning */}
-        <div className="card p-5 sm:p-6 shadow-sm border border-gold/40 bg-paper">
+        {/* Card 3: Dispensary Product Sales (Vibrant Sunset Amber, Gold & Coral) */}
+        <div className="group relative overflow-hidden rounded-3xl border-2 border-amber-300/80 bg-gradient-to-br from-white via-amber-50/60 to-orange-100/40 p-5 sm:p-6 shadow-md transition-all duration-300 hover:shadow-xl hover:shadow-amber-500/20 hover:-translate-y-1">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-amber-400/20 blur-2xl group-hover:scale-125 transition-transform"
+          />
+
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-amber-800">
+            <span className="text-xs font-black uppercase tracking-wider text-amber-900">
               Dispensary Product Sales
             </span>
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-100 text-amber-800 font-bold text-base">
+            <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-tr from-amber-600 via-gold to-orange-500 text-white font-bold text-lg shadow-md shadow-amber-600/30 group-hover:rotate-6 transition-transform">
               🧴
             </span>
           </div>
-          <p className="mt-3 font-display text-3xl font-extrabold text-ink sm:text-4xl">
+
+          <p className="mt-3 font-display text-3xl font-black bg-gradient-to-r from-amber-950 via-orange-800 to-amber-700 bg-clip-text text-transparent sm:text-4xl">
             {formatINR(totalProductEarnings)}
           </p>
-          <div className="mt-2.5 flex items-center justify-between text-xs">
-            <span className="text-smoke">
-              <strong>{totalUnitsSold}</strong> items sold ({paidSales.length} paid orders)
+
+          <div className="mt-3 flex items-center justify-between pt-2 border-t border-amber-200/60 text-xs">
+            <span className="font-semibold text-amber-900 text-[11px]">
+              <strong>{totalUnitsSold}</strong> items sold ({paidSales.length} orders)
             </span>
             <button
               type="button"
               onClick={() => setShowAddSaleModal(true)}
-              className="text-[11px] font-bold text-emerald-dark hover:underline"
+              className="rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-white px-2.5 py-0.5 text-[10px] font-extrabold shadow-xs hover:from-amber-600 hover:to-orange-600 transition-all"
             >
               + Add Sale
             </button>
           </div>
         </div>
 
-        {/* Pending & Action Required */}
-        <div className="card p-5 sm:p-6 shadow-sm border border-line bg-paper">
+        {/* Card 4: Awaiting Action & Pipeline (Vibrant Royal Purple & Berry Pink) */}
+        <div className="group relative overflow-hidden rounded-3xl border-2 border-purple-300/80 bg-gradient-to-br from-white via-purple-50/60 to-pink-100/40 p-5 sm:p-6 shadow-md transition-all duration-300 hover:shadow-xl hover:shadow-purple-500/20 hover:-translate-y-1">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-purple-400/20 blur-2xl group-hover:scale-125 transition-transform"
+          />
+
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-smoke">
-              Awaiting Confirmation
+            <span className="text-xs font-black uppercase tracking-wider text-purple-900">
+              Awaiting Action
             </span>
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-cream text-smoke font-bold text-base">
+            <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-tr from-purple-700 via-fuchsia-600 to-pink-500 text-white font-bold text-lg shadow-md shadow-purple-600/30 group-hover:rotate-6 transition-transform">
               ⏳
             </span>
           </div>
-          <p className="mt-3 font-display text-3xl font-extrabold text-ink sm:text-4xl">
+
+          <p className="mt-3 font-display text-3xl font-black bg-gradient-to-r from-purple-950 via-purple-800 to-pink-700 bg-clip-text text-transparent sm:text-4xl">
             {pendingBookings.length + pendingSales.length}
           </p>
-          <p className="mt-2.5 text-xs text-smoke font-medium">
-            <strong>{pendingBookings.length}</strong> consults · <strong>{pendingSales.length}</strong> product orders pending
-          </p>
+
+          <div className="mt-3 flex items-center justify-between pt-2 border-t border-purple-200/60 text-xs text-purple-900">
+            <span className="font-semibold text-[11px]">
+              <strong>{pendingBookings.length}</strong> consults · <strong>{pendingSales.length}</strong> orders pending
+            </span>
+            <span className="inline-flex h-2 w-2 rounded-full bg-purple-500 animate-pulse" />
+          </div>
         </div>
       </div>
 
