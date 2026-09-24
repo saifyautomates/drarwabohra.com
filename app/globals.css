@@ -12,11 +12,25 @@
 
 html {
   scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
   @apply bg-paper text-ink font-sans antialiased;
   text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* Instant tap responsiveness on mobile (eliminates 300ms delay) */
+a,
+button,
+input,
+select,
+textarea {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 h1,
@@ -30,17 +44,18 @@ h3 {
   color: #fff;
 }
 
-/* Gold rule used under section eyebrows — tiny gold accents only */
+/* Gold rule used under section eyebrows */
 .rule-gold {
   @apply h-[2px] w-10 bg-gold;
 }
 
-/* Card surface — flat, no gradients */
+/* Card surface */
 .card {
   @apply rounded-2xl border border-line bg-white shadow-card;
+  transform: translateZ(0);
 }
 
-/* Hide scrollbars on swipeable tracks (swipe still works) */
+/* Hide scrollbars on swipeable tracks */
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -49,13 +64,13 @@ h3 {
   display: none;
 }
 
-/* Primary CTA — deep emerald, no gradients */
+/* Primary CTA */
 .btn-primary {
-  @apply inline-flex items-center justify-center rounded-xl bg-emerald px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-emerald-dark active:bg-emerald-deep;
+  @apply inline-flex items-center justify-center rounded-xl bg-emerald px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-emerald-dark active:bg-emerald-deep active:scale-[0.98];
 }
 
 .btn-outline {
-  @apply inline-flex items-center justify-center rounded-xl border border-line bg-white px-4 py-2.5 text-sm font-semibold text-ink transition-colors hover:border-emerald hover:text-emerald-dark;
+  @apply inline-flex items-center justify-center rounded-xl border border-line bg-white px-4 py-2.5 text-sm font-semibold text-ink transition-all hover:border-emerald hover:text-emerald-dark active:scale-[0.98];
 }
 
 /* Form controls */
