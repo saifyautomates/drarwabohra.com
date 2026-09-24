@@ -258,6 +258,7 @@ export function sanitizeProduct(
   size: string;
   category: ProductCategory;
   image: string;
+  gallery?: string[];
   inStock: boolean;
   featured: boolean;
   order: number;

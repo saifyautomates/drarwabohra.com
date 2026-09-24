@@ -26,6 +26,7 @@ interface DraftState {
   size: string;
   category: ProductCategory;
   image: string;
+  gallery: string[];
   inStock: boolean;
   featured: boolean;
   order: number;
@@ -44,6 +45,7 @@ const EMPTY: DraftState = {
   size: "50 ml",
   category: "Hair Care",
   image: "",
+  gallery: [],
   inStock: true,
   featured: true,
   order: 0,
@@ -66,6 +68,8 @@ export default function ProductsClient({
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
   const [filterCategory, setFilterCategory] = useState<string>("All");
+  const [targetSlot, setTargetSlot] = useState<number | null>(null);
+  const [urlInput, setUrlInput] = useState<string>("");
 
   const sorted = [...list].sort((a, b) => a.order - b.order);
   const filtered =
@@ -75,7 +79,7 @@ export default function ProductsClient({
 
   function startAdd() {
     setEditing(null);
-    setDraft({ ...EMPTY, order: list.length + 1 });
+    setDraft({ ...EMPTY, gallery: [], order: list.length + 1 });
     setShowModal(true);
     setError(null);
     setSaved(false);
@@ -95,7 +99,8 @@ export default function ProductsClient({
       originalPrice: p.originalPrice ? String(p.originalPrice) : "",
       size: p.size || "",
       category: p.category,
-      image: p.image,
+      image: p.image || "",
+      gallery: p.gallery || [],
       inStock: p.inStock,
       featured: p.featured,
       order: p.order,
@@ -105,13 +110,17 @@ export default function ProductsClient({
     setSaved(false);
   }
 
-  // Handle direct file selection from phone album / gallery / camera
+  // Handle direct file selection from phone album / gallery / camera with instant canvas compression
   async function handleFileSelected(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
-    if (!file) return;
+    if (!file) {
+      setTargetSlot(null);
+      return;
+    }
 
     if (!file.type.startsWith("image/")) {
       setError("Please choose a valid image file (JPEG, PNG, WebP).");
+      setTargetSlot(null);
       return;
     }
 
@@ -119,7 +128,6 @@ export default function ProductsClient({
     setError(null);
 
     try {
-      // Client-side resizing and optimization via HTML5 Canvas
       const reader = new FileReader();
       reader.onload = (readerEvent) => {
         const img = document.createElement("img");
@@ -147,21 +155,52 @@ export default function ProductsClient({
           if (!ctx) {
             setError("Failed to process image.");
             setCompressing(false);
+            setTargetSlot(null);
             return;
           }
 
           ctx.drawImage(img, 0, 0, width, height);
           const compressedDataUrl = canvas.toDataURL("image/jpeg", 0.85);
 
-          setDraft((prev) => ({
-            ...prev,
-            image: compressedDataUrl,
-          }));
+          setDraft((prev) => {
+            const currentGallery = [...(prev.gallery || [])];
+            let newImage = prev.image;
+            let newGallery = [...currentGallery];
+
+            if (targetSlot === 0) {
+              newImage = compressedDataUrl;
+            } else if (targetSlot !== null && targetSlot >= 1 && targetSlot <= 4) {
+              const gIdx = targetSlot - 1;
+              if (gIdx < newGallery.length) {
+                newGallery[gIdx] = compressedDataUrl;
+              } else {
+                newGallery.push(compressedDataUrl);
+              }
+            } else {
+              // Auto-fill next available slot
+              if (!newImage) {
+                newImage = compressedDataUrl;
+              } else if (newGallery.length < 4) {
+                newGallery.push(compressedDataUrl);
+              } else {
+                newImage = compressedDataUrl;
+              }
+            }
+
+            return {
+              ...prev,
+              image: newImage,
+              gallery: newGallery.slice(0, 4),
+            };
+          });
+
           setCompressing(false);
+          setTargetSlot(null);
         };
         img.onerror = () => {
           setError("Failed to load chosen image.");
           setCompressing(false);
+          setTargetSlot(null);
         };
         img.src = readerEvent.target?.result as string;
       };
@@ -169,7 +208,68 @@ export default function ProductsClient({
     } catch {
       setError("Failed to read image file from your album.");
       setCompressing(false);
+      setTargetSlot(null);
     }
+  }
+
+  function triggerSlotUpload(slot: number) {
+    setTargetSlot(slot);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+      fileInputRef.current.click();
+    }
+  }
+
+  function handleMakeCover(slot: number) {
+    if (slot <= 0) return;
+    setDraft((prev) => {
+      const gIdx = slot - 1;
+      const chosen = prev.gallery?.[gIdx];
+      if (!chosen) return prev;
+      const oldCover = prev.image;
+      const remaining = (prev.gallery || []).filter((_, i) => i !== gIdx);
+      return {
+        ...prev,
+        image: chosen,
+        gallery: oldCover ? [oldCover, ...remaining].slice(0, 4) : remaining.slice(0, 4),
+      };
+    });
+  }
+
+  function handleRemovePhoto(slot: number) {
+    setDraft((prev) => {
+      if (slot === 0) {
+        if (prev.gallery && prev.gallery.length > 0) {
+          return {
+            ...prev,
+            image: prev.gallery[0],
+            gallery: prev.gallery.slice(1),
+          };
+        }
+        return { ...prev, image: "" };
+      } else {
+        const gIdx = slot - 1;
+        return {
+          ...prev,
+          gallery: (prev.gallery || []).filter((_, i) => i !== gIdx),
+        };
+      }
+    });
+  }
+
+  function handleAddUrlPhoto() {
+    const url = urlInput.trim();
+    if (!url) return;
+    setDraft((prev) => {
+      if (!prev.image) {
+        return { ...prev, image: url };
+      }
+      if ((prev.gallery || []).length < 4) {
+        return { ...prev, gallery: [...(prev.gallery || []), url] };
+      }
+      return prev;
+    });
+    setUrlInput("");
   }
 
   async function onSubmit(e: React.FormEvent) {
@@ -213,6 +313,10 @@ export default function ProductsClient({
       size: draft.size.trim() || "Standard",
       category: draft.category,
       image: draft.image.trim() || "/images/dr-arwa-bohra.png",
+      gallery: (draft.gallery || [])
+        .map((g) => g.trim())
+        .filter((g) => g && g !== draft.image)
+        .slice(0, 4),
       inStock: draft.inStock,
       featured: draft.featured,
       order: Number(draft.order) || 0,
@@ -468,82 +572,179 @@ export default function ProductsClient({
             </div>
 
             <form onSubmit={onSubmit} className="mt-5 space-y-4">
-              {/* Photo Upload Section */}
-              <div className="rounded-2xl border border-line bg-paper/60 p-4">
-                <label className="block text-xs font-bold uppercase tracking-wider text-ink mb-2">
-                  Product Photo (From Phone Album or Camera)
-                </label>
-
-                <div className="flex flex-col sm:flex-row items-center gap-4">
-                  {/* Thumbnail Preview */}
-                  <div className="relative h-28 w-28 shrink-0 overflow-hidden rounded-xl border border-line bg-white shadow-xs flex items-center justify-center">
-                    {draft.image ? (
-                      <img
-                        src={draft.image}
-                        alt="Preview"
-                        className="h-full w-full object-cover"
-                      />
-                    ) : (
-                      <span className="text-center text-[11px] text-smoke px-2">
-                        No photo selected
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Actions */}
-                  <div className="flex-1 space-y-2 text-center sm:text-left">
-                    <input
-                      ref={fileInputRef}
-                      type="file"
-                      accept="image/*"
-                      onChange={handleFileSelected}
-                      className="hidden"
-                      id="album-file-input"
-                    />
-
-                    <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
-                      <button
-                        type="button"
-                        onClick={() => fileInputRef.current?.click()}
-                        disabled={compressing}
-                        className="btn-primary text-xs flex items-center gap-2"
-                      >
-                        <span>📷</span>
-                        {compressing
-                          ? "Processing photo…"
-                          : draft.image
-                          ? "Choose Different Photo from Album"
-                          : "Upload from Phone Album / Gallery"}
-                      </button>
-
-                      {draft.image && (
-                        <button
-                          type="button"
-                          onClick={() => setDraft((p) => ({ ...p, image: "" }))}
-                          className="btn-outline text-xs text-red-600 hover:text-red-700 hover:bg-red-50"
-                        >
-                          Remove Photo
-                        </button>
-                      )}
-                    </div>
-
-                    <p className="text-[11px] text-smoke">
-                      Supports phone gallery, camera, iPhone photos and Android storage. High-resolution images are automatically optimized.
+              {/* Photo Upload Section - Up to 5 Photos */}
+              <div className="rounded-2xl border border-line bg-paper/60 p-4 sm:p-5">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-ink">
+                      Product Photos (Up to 5 Photos per Product)
+                    </label>
+                    <p className="text-[11px] text-smoke mt-0.5">
+                      First photo is the main cover. You can add up to 4 extra photos for full-screen zoom and gallery views.
                     </p>
+                  </div>
+                  <span className="self-start sm:self-auto rounded-full bg-emerald-soft px-2.5 py-0.5 text-xs font-bold text-emerald-dark">
+                    {[draft.image, ...(draft.gallery || [])].filter(Boolean).length} / 5 Added
+                  </span>
+                </div>
 
-                    <div className="pt-1">
-                      <input
-                        type="text"
-                        placeholder="Or enter image URL (e.g. /images/products/hair-serum.jpg)"
-                        value={draft.image}
-                        onChange={(e) =>
-                          setDraft((p) => ({ ...p, image: e.target.value }))
+                {/* 5-Slot Photo Grid */}
+                <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+                  {[0, 1, 2, 3, 4].map((slotIdx) => {
+                    const photoSrc =
+                      slotIdx === 0
+                        ? draft.image
+                        : draft.gallery?.[slotIdx - 1] || "";
+                    const isCover = slotIdx === 0;
+
+                    return (
+                      <div
+                        key={slotIdx}
+                        className={`group relative aspect-square rounded-2xl border-2 overflow-hidden transition-all flex flex-col items-center justify-center ${
+                          photoSrc
+                            ? isCover
+                              ? "border-emerald ring-2 ring-emerald/20 bg-white"
+                              : "border-line bg-white shadow-xs"
+                            : "border-dashed border-smoke/30 bg-cream/30 hover:border-emerald hover:bg-emerald-soft/20 cursor-pointer"
+                        }`}
+                        onClick={() => {
+                          if (!photoSrc) triggerSlotUpload(slotIdx);
+                        }}
+                      >
+                        {photoSrc ? (
+                          <>
+                            <img
+                              src={photoSrc}
+                              alt={`Photo ${slotIdx + 1}`}
+                              className="h-full w-full object-cover"
+                            />
+
+                            {/* Badge */}
+                            <div className="absolute top-1.5 left-1.5 z-10 pointer-events-none">
+                              {isCover ? (
+                                <span className="rounded-md bg-emerald text-white px-1.5 py-0.5 text-[9px] font-extrabold uppercase shadow-xs">
+                                  Cover
+                                </span>
+                              ) : (
+                                <span className="rounded-md bg-ink/70 text-white px-1.5 py-0.5 text-[9px] font-semibold backdrop-blur">
+                                  #{slotIdx + 1}
+                                </span>
+                              )}
+                            </div>
+
+                            {/* Hover Actions Overlay */}
+                            <div className="absolute inset-0 bg-ink/70 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-1.5 p-2 z-20">
+                              {!isCover && (
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleMakeCover(slotIdx);
+                                  }}
+                                  className="w-full rounded-lg bg-emerald px-2 py-1 text-[10px] font-bold text-white shadow-xs hover:bg-emerald-dark transition-colors"
+                                  title="Set as Main Cover Photo"
+                                >
+                                  Make Cover
+                                </button>
+                              )}
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  triggerSlotUpload(slotIdx);
+                                }}
+                                className="w-full rounded-lg bg-white/90 px-2 py-1 text-[10px] font-semibold text-ink hover:bg-white transition-colors"
+                              >
+                                Replace
+                              </button>
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleRemovePhoto(slotIdx);
+                                }}
+                                className="w-full rounded-lg bg-red-600/90 px-2 py-1 text-[10px] font-semibold text-white hover:bg-red-700 transition-colors"
+                              >
+                                Remove
+                              </button>
+                            </div>
+                          </>
+                        ) : (
+                          <div className="p-2 text-center">
+                            <span className="text-xl">📷</span>
+                            <span className="block mt-1 text-[11px] font-semibold text-smoke">
+                              {isCover ? "+ Cover" : `+ Photo ${slotIdx + 1}`}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* Hidden File Input for instant camera / album pick */}
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileSelected}
+                  className="hidden"
+                  id="album-file-input"
+                />
+
+                {/* Bottom Quick Controls & URL Input */}
+                <div className="mt-4 pt-3 border-t border-line flex flex-col sm:flex-row items-center justify-between gap-3">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const currentCount = [draft.image, ...(draft.gallery || [])].filter(Boolean).length;
+                      if (currentCount >= 5) {
+                        setError("Maximum 5 photos allowed per product. Remove a photo to upload another.");
+                        return;
+                      }
+                      triggerSlotUpload(currentCount);
+                    }}
+                    disabled={compressing || [draft.image, ...(draft.gallery || [])].filter(Boolean).length >= 5}
+                    className="btn-primary w-full sm:w-auto text-xs flex items-center justify-center gap-2"
+                  >
+                    <span>📷</span>
+                    <span>
+                      {compressing
+                        ? "Optimizing photo in browser…"
+                        : [draft.image, ...(draft.gallery || [])].filter(Boolean).length >= 5
+                        ? "Max 5 Photos Reached"
+                        : "+ Add Photo from Phone / Album"}
+                    </span>
+                  </button>
+
+                  <div className="flex w-full sm:w-auto items-center gap-2 flex-1 sm:max-w-md">
+                    <input
+                      type="text"
+                      placeholder="Or enter image URL (/images/products/...)"
+                      value={urlInput}
+                      onChange={(e) => setUrlInput(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          handleAddUrlPhoto();
                         }
-                        className="input-text text-xs"
-                      />
-                    </div>
+                      }}
+                      className="input-text text-xs flex-1"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleAddUrlPhoto}
+                      disabled={!urlInput.trim() || [draft.image, ...(draft.gallery || [])].filter(Boolean).length >= 5}
+                      className="btn-outline !py-2 !px-3 text-xs shrink-0 font-semibold"
+                    >
+                      + Add URL
+                    </button>
                   </div>
                 </div>
+
+                <p className="text-[11px] text-smoke mt-2">
+                  ⚡ Images are optimized on-device using client-side canvas for ultra-fast loading without slowing down the site.
+                </p>
               </div>
 
               {/* Basic Fields */}

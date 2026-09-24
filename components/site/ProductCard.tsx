@@ -17,6 +17,10 @@ export default function ProductCard({
 }: ProductCardProps) {
   const [showDetail, setShowDetail] = useState(false);
   const [activeImage, setActiveImage] = useState(product.image);
+
+  useEffect(() => {
+    setActiveImage(product.image);
+  }, [product.image]);
   const [fullscreenIndex, setFullscreenIndex] = useState<number | null>(null);
   const [isZoomed, setIsZoomed] = useState(false);
 

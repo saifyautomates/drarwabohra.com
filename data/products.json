@@ -18,11 +18,12 @@
     "originalPrice": 699,
     "size": "50 ml",
     "category": "Skin Care",
-    "image": "/images/products/face-serum.jpg",
+    "image": "/images/products/clear-skin-solution-main.jpg",
     "gallery": [
+      "/images/products/clear-skin-solution-3bottles.jpg",
       "/images/products/clear-skin-solution-guide.jpg",
-      "/images/products/clear-skin-solution-batch.jpg",
-      "/images/products/clear-skin-solution.jpg"
+      "/images/products/clear-skin-solution.jpg",
+      "/images/products/clear-skin-solution-batch.jpg"
     ],
     "inStock": true,
     "featured": true,
@@ -48,10 +49,11 @@
     "originalPrice": 699,
     "size": "50 ml",
     "category": "Hair Care",
-    "image": "/images/products/hair-serum.jpg",
+    "image": "/images/products/hair-serum-main.jpg",
     "gallery": [
-      "/images/products/hair-serum-guide.jpg",
-      "/images/products/homeopathic-hair-serum.jpg"
+      "/images/products/hair-serum.jpg",
+      "/images/products/homeopathic-hair-serum.jpg",
+      "/images/products/hair-serum-guide.jpg"
     ],
     "inStock": true,
     "featured": true,
@@ -77,10 +79,11 @@
     "originalPrice": 550,
     "size": "100 ml",
     "category": "Hair Care",
-    "image": "/images/products/scalp-oil.jpg",
+    "image": "/images/products/magical-hairoil-main.jpg",
     "gallery": [
-      "/images/products/biphasic-hair-oil-real.jpg",
-      "/images/products/biphasic-herbal-hair-oil.jpg"
+      "/images/products/scalp-oil.jpg",
+      "/images/products/biphasic-herbal-hair-oil.jpg",
+      "/images/products/biphasic-hair-oil-real.jpg"
     ],
     "inStock": true,
     "featured": true,
