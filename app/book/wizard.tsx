@@ -566,13 +566,13 @@ export default function Wizard({
 
       {/* Sticky summary — steps 5–7 (Doctolib pattern) */}
       {step >= 5 && (
-        <div className="sticky top-[57px] z-20 mb-4 rounded-xl border border-line bg-white px-4 py-2.5 shadow-card">
-          <div className="flex items-center justify-between gap-2 text-sm">
-            <span className="font-semibold text-ink">{plan === "plan-b" ? "Plan B" : "Plan A"} · Voice Call</span>
-            <span className="text-smoke">
+        <div className="sticky top-[57px] z-20 mb-4 rounded-xl border border-line bg-white px-3.5 sm:px-4 py-2 sm:py-2.5 shadow-card">
+          <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1 text-xs sm:text-sm">
+            <span className="font-semibold text-ink break-words">{plan === "plan-b" ? "Plan B" : "Plan A"} · Voice Call</span>
+            <span className="text-smoke break-words">
               {date ? `${formatDateLabel(date)}${time ? ` · ${formatTime12(time)}` : ""}` : "Slot not chosen"}
             </span>
-            <span className="font-semibold text-emerald-dark">{formatINR(fee)}</span>
+            <span className="font-semibold text-emerald-dark shrink-0">{formatINR(fee)}</span>
           </div>
         </div>
       )}
@@ -582,7 +582,7 @@ export default function Wizard({
       {/* ---------------- Step 1: Choose Your Plan ---------------- */}
       {step === 1 && (
         <section>
-          <div className="flex items-center justify-between">
+          <div className="flex flex-wrap items-center justify-between gap-2">
             <span className="rounded-full bg-emerald-soft px-3 py-1 text-xs font-bold uppercase tracking-wider text-emerald-dark">
               E-Consultation Platform
             </span>
@@ -615,15 +615,15 @@ export default function Wizard({
                   setError(null);
                 }
               }}
-              className={`w-full rounded-2xl border-2 p-5 text-left transition-all cursor-pointer ${
+              className={`w-full rounded-2xl border-2 p-4 sm:p-5 text-left transition-all cursor-pointer ${
                 plan === "plan-a"
                   ? "border-emerald bg-emerald-soft/30 shadow-card ring-2 ring-emerald/20"
                   : "border-line bg-white hover:border-emerald/40"
               }`}
             >
-              <div className="flex items-start justify-between gap-3">
+              <div className="flex flex-wrap items-start justify-between gap-2.5 sm:gap-3">
                 <div className="flex items-center gap-2.5">
-                  <span className={`flex h-5 w-5 items-center justify-center rounded-full border-2 ${
+                  <span className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 ${
                     plan === "plan-a" ? "border-emerald bg-emerald" : "border-smoke/40"
                   }`}>
                     {plan === "plan-a" && <span className="h-2 w-2 rounded-full bg-white" />}
@@ -637,7 +637,7 @@ export default function Wizard({
                     </h2>
                   </div>
                 </div>
-                <div className="text-right">
+                <div className="text-right shrink-0">
                   <p className="font-display text-2xl font-bold text-ink sm:text-3xl">
                     ₹2,000
                   </p>

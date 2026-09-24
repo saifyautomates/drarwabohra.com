@@ -203,7 +203,7 @@ export default function ProductCard({
                   </span>
                 )}
               </div>
-              <span className="text-[11px] text-smoke">Pan-India Delivery</span>
+              <span className="text-[10px] sm:text-[11px] text-smoke shrink-0">Pan-India Delivery</span>
             </div>
 
             <div className="grid grid-cols-2 gap-2">
@@ -220,7 +220,7 @@ export default function ProductCard({
                   href={waUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="btn-primary text-xs py-2 px-2 text-center flex items-center justify-center gap-1.5 bg-emerald-dark hover:bg-emerald"
+                  className="btn-primary text-[11px] sm:text-xs py-2 px-1.5 sm:px-2 text-center flex items-center justify-center gap-1 bg-emerald-dark hover:bg-emerald whitespace-nowrap"
                 >
                   <span>Buy on WhatsApp</span>
                 </a>
@@ -241,7 +241,7 @@ export default function ProductCard({
       {/* Detail Modal */}
       {showDetail && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-ink/60 p-4 backdrop-blur-sm overflow-y-auto">
-          <div className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl border border-line bg-white p-6 shadow-2xl sm:p-8">
+          <div className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl border border-line bg-white p-5 shadow-2xl sm:p-8">
             <button
               type="button"
               onClick={() => setShowDetail(false)}

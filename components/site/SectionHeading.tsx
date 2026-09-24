@@ -22,9 +22,9 @@ export default function SectionHeading({
         </p>
       )}
       <div className="rule-gold my-3" aria-hidden="true" />
-      <h2 className="font-display text-2xl text-ink sm:text-3xl">{title}</h2>
+      <h2 className="font-display text-2xl text-ink sm:text-3xl break-words">{title}</h2>
       {subline && (
-        <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-smoke">
+        <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-smoke break-words">
           {subline}
         </p>
       )}

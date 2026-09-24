@@ -70,18 +70,18 @@ function DoctorPortrait() {
 
       {/* Info */}
       <div className="relative mt-6">
-        <h2 className="font-display text-2xl text-ink sm:text-3xl">Dr. Arwa Bohra</h2>
+        <h2 className="font-display text-2xl text-ink sm:text-3xl break-words">Dr. Arwa Bohra</h2>
         <div className="rule-gold mx-auto my-3" aria-hidden="true" />
-        <p className="text-sm font-medium text-emerald-dark">
+        <p className="text-sm font-medium text-emerald-dark break-words">
           Homeopathic Consultant · Skin &amp; Hair Expert
         </p>
-        <p className="mt-1 text-xs text-smoke">
+        <p className="mt-1 text-xs text-smoke break-words">
           Online E-Consultation · Voice Call &amp; Remedies Worldwide
         </p>
 
         {/* Badges */}
-        <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-soft px-3 py-1 text-xs font-semibold text-emerald-dark">
+        <div className="mt-5 flex flex-wrap items-center justify-center gap-1.5 sm:gap-2">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-soft px-2.5 sm:px-3 py-1 text-[11px] sm:text-xs font-semibold text-emerald-dark">
             <span className="h-1.5 w-1.5 rounded-full bg-emerald-dark" />
             Verified Practitioner
           </span>
@@ -89,7 +89,7 @@ function DoctorPortrait() {
             href="https://www.youtube.com/@DrArwaBohra"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 rounded-full bg-[#FF0000] px-3.5 py-1 text-xs font-bold text-white shadow-sm hover:bg-[#CC0000] transition-all hover:scale-105"
+            className="inline-flex items-center gap-1.5 rounded-full bg-[#FF0000] px-2.5 sm:px-3.5 py-1 text-[11px] sm:text-xs font-bold text-white shadow-sm hover:bg-[#CC0000] transition-all hover:scale-105"
           >
             <svg className="h-3.5 w-3.5 fill-white" viewBox="0 0 24 24">
               <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
@@ -100,14 +100,14 @@ function DoctorPortrait() {
             href="https://www.instagram.com/drarwabohra/"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] px-3.5 py-1 text-xs font-bold text-white shadow-sm hover:opacity-95 transition-all hover:scale-105"
+            className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] px-2.5 sm:px-3.5 py-1 text-[11px] sm:text-xs font-bold text-white shadow-sm hover:opacity-95 transition-all hover:scale-105"
           >
             <svg className="h-3.5 w-3.5 fill-white" viewBox="0 0 24 24">
               <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
             </svg>
             @drarwabohra
           </a>
-          <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-3 py-1 text-xs font-medium text-amber-800">
+          <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2.5 sm:px-3 py-1 text-[11px] sm:text-xs font-medium text-amber-800">
             ★ Silver Creator
           </span>
         </div>
@@ -165,15 +165,15 @@ export default function HomePage() {
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-dark">
               {settings.tagline}
             </p>
-            <h1 className="mt-4 font-display text-4xl leading-tight text-ink sm:text-5xl">
+            <h1 className="mt-4 font-display text-3xl sm:text-4xl lg:text-5xl leading-tight text-ink break-words">
               {settings.heroHeadline}
             </h1>
-            <p className="mt-4 max-w-xl text-[16px] leading-relaxed text-smoke">
+            <p className="mt-4 max-w-xl text-[15px] sm:text-[16px] leading-relaxed text-smoke break-words">
               {settings.heroSubline}
             </p>
             <p className="mt-5 text-sm font-semibold text-ink">
               {settings.doctorName}
-              <span className="mt-0.5 block text-sm font-normal text-smoke">
+              <span className="mt-0.5 block text-sm font-normal text-smoke break-words">
                 {settings.doctorTitle} · Online E-Consultations
               </span>
             </p>
@@ -188,27 +188,27 @@ export default function HomePage() {
             </div>
 
             <ul className="mt-8 space-y-2.5 text-sm text-ink/85">
-              <li className="flex items-center gap-2.5">
-                <CheckIcon />
-                Plan A: ₹2,000 (1 In-Depth Consult + 4-Week Follow-up Included)
+              <li className="flex items-start gap-2.5">
+                <span className="mt-0.5 shrink-0"><CheckIcon /></span>
+                <span className="break-words leading-snug">Plan A: ₹2,000 (1 In-Depth Consult + 4-Week Follow-up Included)</span>
               </li>
-              <li className="flex items-center gap-2.5">
-                <CheckIcon />
-                Plan B: ₹4,999 (1 Consult + 2 Follow-ups over 3 Months + Routine PDF)
+              <li className="flex items-start gap-2.5">
+                <span className="mt-0.5 shrink-0"><CheckIcon /></span>
+                <span className="break-words leading-snug">Plan B: ₹4,999 (1 Consult + 2 Follow-ups over 3 Months + Routine PDF)</span>
               </li>
-              <li className="flex items-center gap-2.5">
-                <CheckIcon />
-                1:1 Voice Call · Pay via PhonePe / GPay / Paytm (7049205128)
+              <li className="flex items-start gap-2.5">
+                <span className="mt-0.5 shrink-0"><CheckIcon /></span>
+                <span className="break-words leading-snug">1:1 Voice Call · Pay via PhonePe / GPay / Paytm (7049205128)</span>
               </li>
             </ul>
 
             {next ? (
-              <p className="badge badge-open mt-6 !px-3.5 !py-1.5 !text-[13px]">
+              <p className="badge badge-open mt-6 !px-3 sm:!px-3.5 !py-1.5 !text-xs sm:!text-[13px] inline-flex flex-wrap items-center gap-1.5 leading-snug">
                 Next available: {formatDateLabel(next.date)} ·{" "}
                 {formatTime12(next.time)}
               </p>
             ) : (
-              <p className="badge badge-closed mt-6 !px-3.5 !py-1.5 !text-[13px]">
+              <p className="badge badge-closed mt-6 !px-3 sm:!px-3.5 !py-1.5 !text-xs sm:!text-[13px] inline-flex flex-wrap items-center gap-1.5 leading-snug">
                 No open slots in the next 14 days — try WhatsApp
               </p>
             )}
@@ -312,13 +312,13 @@ export default function HomePage() {
             {/* Plan A */}
             <div className="card relative flex flex-col justify-between p-7 sm:p-9 border-2 border-emerald/20 hover:border-emerald-dark/50 transition-all shadow-md bg-paper">
               <div>
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between flex-wrap gap-2">
                   <span className="rounded-full bg-emerald-soft px-3 py-1 text-xs font-bold text-emerald-dark uppercase tracking-wider">
                     Plan A · Essential Care
                   </span>
                   <span className="text-xs text-smoke font-medium">1 Month Care</span>
                 </div>
-                <div className="mt-4 flex items-baseline gap-2">
+                <div className="mt-4 flex items-baseline flex-wrap gap-x-2 gap-y-1">
                   <span className="font-display text-4xl sm:text-5xl font-bold text-ink">₹2,000</span>
                   <span className="text-sm text-smoke">/ in-depth consultation</span>
                 </div>
@@ -330,20 +330,20 @@ export default function HomePage() {
 
                 <ul className="space-y-3.5 text-sm text-ink/90">
                   <li className="flex items-start gap-3">
-                    <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-soft text-emerald-dark font-bold text-xs">✓</span>
-                    <span><strong>1 in-depth consultation</strong> (conducted via voice call)</span>
+                    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-soft text-emerald-dark font-bold text-xs">✓</span>
+                    <span className="break-words leading-snug"><strong>1 in-depth consultation</strong> (conducted via voice call)</span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-soft text-emerald-dark font-bold text-xs">✓</span>
-                    <span><strong>Personalised medicines</strong>, tailored diet &amp; lifestyle advice</span>
+                    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-soft text-emerald-dark font-bold text-xs">✓</span>
+                    <span className="break-words leading-snug"><strong>Personalised medicines</strong>, tailored diet &amp; lifestyle advice</span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-soft text-emerald-dark font-bold text-xs">✓</span>
-                    <span><strong>Follow-up within 4 weeks:</strong> <span className="text-emerald-dark font-bold">INCLUDED</span></span>
+                    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-soft text-emerald-dark font-bold text-xs">✓</span>
+                    <span className="break-words leading-snug"><strong>Follow-up within 4 weeks:</strong> <span className="text-emerald-dark font-bold">INCLUDED</span></span>
                   </li>
                   <li className="flex items-start gap-3 text-smoke">
-                    <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-cream text-smoke font-bold text-xs">•</span>
-                    <span>Follow-up after 4 weeks: ₹1,500</span>
+                    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-cream text-smoke font-bold text-xs">•</span>
+                    <span className="break-words leading-snug">Follow-up after 4 weeks: ₹1,500</span>
                   </li>
                 </ul>
               </div>
@@ -361,19 +361,19 @@ export default function HomePage() {
             </div>
 
             {/* Plan B */}
-            <div className="card relative flex flex-col justify-between p-7 sm:p-9 border-2 border-gold shadow-xl bg-paper">
-              <div className="absolute -top-3.5 right-6 rounded-full bg-gradient-to-r from-gold to-amber-600 px-4 py-1 text-xs font-bold text-white shadow-md uppercase tracking-wider">
+            <div className="card relative flex flex-col justify-between p-5 sm:p-8 border-2 border-gold shadow-xl bg-paper">
+              <div className="absolute -top-3.5 right-4 sm:right-6 rounded-full bg-gradient-to-r from-gold to-amber-600 px-3 sm:px-4 py-1 text-[11px] sm:text-xs font-bold text-white shadow-md uppercase tracking-wider">
                 Most Recommended · 3 Months
               </div>
 
               <div>
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between flex-wrap gap-2">
                   <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-bold text-amber-800 uppercase tracking-wider">
                     Plan B · Complete Care
                   </span>
                   <span className="text-xs text-smoke font-medium">3 Months Healing</span>
                 </div>
-                <div className="mt-4 flex items-baseline gap-2">
+                <div className="mt-4 flex items-baseline flex-wrap gap-x-2 gap-y-1">
                   <span className="font-display text-4xl sm:text-5xl font-bold text-ink">₹4,999</span>
                   <span className="text-sm text-smoke">/ full 3 months</span>
                 </div>
@@ -385,20 +385,20 @@ export default function HomePage() {
 
                 <ul className="space-y-3.5 text-sm text-ink/90">
                   <li className="flex items-start gap-3">
-                    <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-gold/20 text-amber-800 font-bold text-xs">✓</span>
-                    <span><strong>1 Consultation + 2 Follow-ups</strong> (spread over 3 months)</span>
+                    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-gold/20 text-amber-800 font-bold text-xs">✓</span>
+                    <span className="break-words leading-snug"><strong>1 Consultation + 2 Follow-ups</strong> (spread over 3 months)</span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-gold/20 text-amber-800 font-bold text-xs">✓</span>
-                    <span><strong>Regular medicine adjustments</strong> as you heal</span>
+                    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-gold/20 text-amber-800 font-bold text-xs">✓</span>
+                    <span className="break-words leading-snug"><strong>Regular medicine adjustments</strong> as you heal</span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-gold/20 text-amber-800 font-bold text-xs">✓</span>
-                    <span><strong>Custom Healing Routine PDF</strong> (Skin / Hair / Anxiety / Digestion)</span>
+                    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-gold/20 text-amber-800 font-bold text-xs">✓</span>
+                    <span className="break-words leading-snug"><strong>Custom Healing Routine PDF</strong> (Skin / Hair / Anxiety / Digestion)</span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-amber-100 text-amber-800 font-bold text-xs">★</span>
-                    <span className="font-semibold text-amber-900">🎁 ₹50 OFF on Hair or Face Serum</span>
+                    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-amber-100 text-amber-800 font-bold text-xs">★</span>
+                    <span className="font-semibold text-amber-900 break-words leading-snug">🎁 ₹50 OFF on Hair or Face Serum</span>
                   </li>
                 </ul>
               </div>
