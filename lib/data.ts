@@ -105,6 +105,27 @@ export interface Product {
   createdAt: string;
 }
 
+export interface ProductSale {
+  id: string; // e.g. "SALE-0001"
+  customerName: string;
+  customerPhone: string;
+  customerCity?: string;
+  productId: string;
+  productTitle: string;
+  quantity: number;
+  unitPrice: number;
+  totalAmount: number;
+  paymentStatus: "paid" | "pending" | "refunded";
+  paymentMethod: "upi" | "cash" | "bank-transfer" | "other";
+  deliveryStatus: "processing" | "dispatched" | "delivered";
+  trackingNumber?: string;
+  courierName?: string;
+  notes?: string;
+  createdAt: string;
+  date: string; // YYYY-MM-DD
+}
+
+
 export interface Booking {
   id: string; // DRB-####
   token: string;
@@ -591,3 +612,66 @@ export const WEEKDAY_LABEL: Record<WeekDay, string> = {
   "5": "Friday",
   "6": "Saturday",
 };
+
+
+/* ------------------------------------------------------------------ */
+/* Product Sales / Orders                                             */
+/* ------------------------------------------------------------------ */
+
+export function getProductSales(): ProductSale[] {
+  const list = readJson<ProductSale[]>("product_sales.json", []);
+  return [...list].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+}
+
+export function saveProductSales(list: ProductSale[]) {
+  writeJson("product_sales.json", list);
+}
+
+function nextSaleId(sales: ProductSale[]): string {
+  let max = 0;
+  for (const s of sales) {
+    const m = /^SALE-(\d+)$/.exec(s.id);
+    if (m) max = Math.max(max, parseInt(m[1], 10));
+  }
+  return `SALE-${String(max + 1).padStart(4, "0")}`;
+}
+
+export function addProductSale(
+  data: Omit<ProductSale, "id" | "createdAt" | "date"> & { date?: string }
+): ProductSale {
+  const sales = getProductSales();
+  const id = nextSaleId(sales);
+  const now = new Date();
+  const createdAt = now.toISOString();
+  const istDate = new Date(now.getTime() + 5.5 * 60 * 60 * 1000).toISOString().slice(0, 10);
+  const date = data.date || istDate;
+  const newSale: ProductSale = {
+    ...data,
+    id,
+    createdAt,
+    date,
+  };
+  saveProductSales([newSale, ...sales]);
+  return newSale;
+}
+
+export function updateProductSale(
+  id: string,
+  patch: Partial<ProductSale>
+): ProductSale | null {
+  const sales = getProductSales();
+  const idx = sales.findIndex((s) => s.id === id);
+  if (idx === -1) return null;
+  const updated: ProductSale = { ...sales[idx], ...patch };
+  sales[idx] = updated;
+  saveProductSales(sales);
+  return updated;
+}
+
+export function deleteProductSale(id: string): boolean {
+  const sales = getProductSales();
+  const filtered = sales.filter((s) => s.id !== id);
+  if (filtered.length === sales.length) return false;
+  saveProductSales(filtered);
+  return true;
+}
