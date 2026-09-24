@@ -675,3 +675,84 @@ export function deleteProductSale(id: string): boolean {
   saveProductSales(filtered);
   return true;
 }
+
+
+/* ------------------------------------------------------------------ */
+/* Patient Registry & Clinical Records                                */
+/* ------------------------------------------------------------------ */
+
+export interface PatientRecord {
+  id: string; // e.g. "PAT-0001"
+  name: string;
+  mobile: string;
+  email?: string;
+  age?: number;
+  gender?: string;
+  city?: string;
+  chiefComplaint?: string;
+  medicalHistory?: string;
+  currentRemedies?: string;
+  notes?: string;
+  tags?: string[];
+  createdAt: string;
+  updatedAt?: string;
+}
+
+export function getPatientRecords(): PatientRecord[] {
+  const list = readJson<PatientRecord[]>("patients.json", []);
+  return [...list].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+}
+
+export function savePatientRecords(list: PatientRecord[]) {
+  writeJson("patients.json", list);
+}
+
+function nextPatientId(patients: PatientRecord[]): string {
+  let max = 0;
+  for (const p of patients) {
+    const m = /^PAT-(\d+)$/.exec(p.id);
+    if (m) max = Math.max(max, parseInt(m[1], 10));
+  }
+  return `PAT-${String(max + 1).padStart(4, "0")}`;
+}
+
+export function addPatientRecord(
+  data: Omit<PatientRecord, "id" | "createdAt">
+): PatientRecord {
+  const list = getPatientRecords();
+  const id = nextPatientId(list);
+  const now = new Date().toISOString();
+  const newPatient: PatientRecord = {
+    ...data,
+    id,
+    createdAt: now,
+    updatedAt: now,
+  };
+  savePatientRecords([newPatient, ...list]);
+  return newPatient;
+}
+
+export function updatePatientRecord(
+  id: string,
+  patch: Partial<PatientRecord>
+): PatientRecord | null {
+  const list = getPatientRecords();
+  const idx = list.findIndex((p) => p.id === id);
+  if (idx === -1) return null;
+  const updated: PatientRecord = {
+    ...list[idx],
+    ...patch,
+    updatedAt: new Date().toISOString(),
+  };
+  list[idx] = updated;
+  savePatientRecords(list);
+  return updated;
+}
+
+export function deletePatientRecord(id: string): boolean {
+  const list = getPatientRecords();
+  const filtered = list.filter((p) => p.id !== id);
+  if (filtered.length === list.length) return false;
+  savePatientRecords(filtered);
+  return true;
+}

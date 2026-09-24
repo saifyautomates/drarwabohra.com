@@ -1,0 +1,80 @@
+[
+  {
+    "id": "PAT-0001",
+    "name": "Saif",
+    "mobile": "7014098198",
+    "email": "saif@example.com",
+    "age": 23,
+    "gender": "Male",
+    "city": "Indore, MP",
+    "chiefComplaint": "Hairfall & Scalp Thinning",
+    "medicalHistory": "Hairfall persisting for 6 months, slight scalp dryness. No previous systemic illness.",
+    "currentRemedies": "Thuja 200C (once weekly morning), Arnica Hair Oil (gentle scalp massage 3x/week).",
+    "notes": "Patient reported noticeable reduction in hairfall after first month. Advised to continue routine and follow-up in 4 weeks.",
+    "tags": [
+      "Hair Care",
+      "Follow-up",
+      "Visited"
+    ],
+    "createdAt": "2026-09-23T20:15:42.197Z",
+    "updatedAt": "2026-09-24T05:30:00.000Z"
+  },
+  {
+    "id": "PAT-0002",
+    "name": "Priya Sharma",
+    "mobile": "9876543210",
+    "email": "priya.sharma@example.com",
+    "age": 28,
+    "gender": "Female",
+    "city": "Mumbai, MH",
+    "chiefComplaint": "Acne on Cheeks & Hormonal Breakouts",
+    "medicalHistory": "Adult acne flaring before menstrual cycle for past 8 months. Used OTC topical creams with temporary relief.",
+    "currentRemedies": "Berberis Aquifolium Q (10 drops twice daily in warm water) + Glowing Skin Elixir at bedtime.",
+    "notes": "Ordered Hair Vitalizing Serum as well. Diet recommendations: reduce dairy & refined sugars. Follow-up scheduled.",
+    "tags": [
+      "Skin Care",
+      "Acne",
+      "Dispensary Buyer"
+    ],
+    "createdAt": "2026-09-23T20:57:06.815Z",
+    "updatedAt": "2026-09-24T05:00:00.000Z"
+  },
+  {
+    "id": "PAT-0003",
+    "name": "Rohit Verma",
+    "mobile": "9823456789",
+    "email": "rohit.verma@example.com",
+    "age": 34,
+    "gender": "Male",
+    "city": "New Delhi, DL",
+    "chiefComplaint": "Chronic Dandruff & Skin Glow",
+    "medicalHistory": "Dry scalp with flaky white dandruff, worse during seasonal transitions.",
+    "currentRemedies": "Glow Radiant Face Elixir (2 bottles) + Scalp Therapy oil.",
+    "notes": "Purchased 2 bottles of Face Elixir via UPI. Courier dispatched via DTDC (DTC84729104).",
+    "tags": [
+      "Dispensary Buyer",
+      "Skin Care"
+    ],
+    "createdAt": "2026-09-23T11:30:00.000Z",
+    "updatedAt": "2026-09-23T11:30:00.000Z"
+  },
+  {
+    "id": "PAT-0004",
+    "name": "Ananya Patel",
+    "mobile": "9912345678",
+    "email": "ananya.patel@example.com",
+    "age": 31,
+    "gender": "Female",
+    "city": "Ahmedabad, GJ",
+    "chiefComplaint": "Melasma & Pigmentation",
+    "medicalHistory": "Mild melasma patches on cheekbones post-pregnancy. Sun sensitive.",
+    "currentRemedies": "Pure Rosehip & Frankincense Oil + Sepia 200.",
+    "notes": "Delivered via Delhivery. Patient confirmed pigment fading on cheeks.",
+    "tags": [
+      "Pigmentation",
+      "Dispensary Buyer"
+    ],
+    "createdAt": "2026-09-21T09:45:00.000Z",
+    "updatedAt": "2026-09-21T09:45:00.000Z"
+  }
+]
