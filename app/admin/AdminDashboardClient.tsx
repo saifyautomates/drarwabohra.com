@@ -91,9 +91,13 @@ export default function AdminDashboardClient({
     return d.toISOString().slice(0, 10);
   }, [todayObj]);
 
+  // Canonical date extractors (prevents double-counting between appointment date & createdAt)
+  const getBookingDate = (b: Booking): string => b.date || b.createdAt.slice(0, 10);
+  const getSaleDate = (s: ProductSale): string => s.date || s.createdAt.slice(0, 10);
+
   // Check if a booking falls within a time range
   const isBookingInRange = (b: Booking, range: TimeRange) => {
-    const d = b.date || b.createdAt.slice(0, 10);
+    const d = getBookingDate(b);
     if (range === "today") return d === todayStr;
     if (range === "yesterday") return d === yesterdayStr;
     if (range === "week") return d >= sevenDaysAgoStr;
@@ -103,7 +107,7 @@ export default function AdminDashboardClient({
 
   // Check if a sale falls within a time range
   const isSaleInRange = (s: ProductSale, range: TimeRange) => {
-    const d = s.date || s.createdAt.slice(0, 10);
+    const d = getSaleDate(s);
     if (range === "today") return d === todayStr;
     if (range === "yesterday") return d === yesterdayStr;
     if (range === "week") return d >= sevenDaysAgoStr;
@@ -199,12 +203,12 @@ export default function AdminDashboardClient({
     const getDailyData = (dStr: string) => {
       const dayBookings = initialBookings.filter(
         (b) =>
-          (b.date === dStr || b.createdAt.slice(0, 10) === dStr) &&
+          getBookingDate(b) === dStr &&
           (b.status === "confirmed" || b.status === "visited")
       );
       const daySales = sales.filter(
         (s) =>
-          (s.date === dStr || s.createdAt.slice(0, 10) === dStr) &&
+          getSaleDate(s) === dStr &&
           s.paymentStatus === "paid"
       );
 
@@ -269,18 +273,22 @@ export default function AdminDashboardClient({
           .toISOString()
           .slice(0, 10);
 
-        const dayBookings = initialBookings.filter(
-          (b) =>
-            b.date >= dStr &&
-            b.date < nextDStr &&
+        const dayBookings = initialBookings.filter((b) => {
+          const bd = getBookingDate(b);
+          return (
+            bd >= dStr &&
+            bd < nextDStr &&
             (b.status === "confirmed" || b.status === "visited")
-        );
-        const daySales = sales.filter(
-          (s) =>
-            s.date >= dStr &&
-            s.date < nextDStr &&
+          );
+        });
+        const daySales = sales.filter((s) => {
+          const sd = getSaleDate(s);
+          return (
+            sd >= dStr &&
+            sd < nextDStr &&
             s.paymentStatus === "paid"
-        );
+          );
+        });
 
         const appRev = dayBookings.reduce((acc, b) => acc + getBookingFee(b), 0);
         const prodRev = daySales.reduce((acc, s) => acc + s.totalAmount, 0);
@@ -301,12 +309,12 @@ export default function AdminDashboardClient({
       const allDates = new Set<string>();
       initialBookings.forEach((b) => {
         if (b.status === "confirmed" || b.status === "visited") {
-          allDates.add(b.date || b.createdAt.slice(0, 10));
+          allDates.add(getBookingDate(b));
         }
       });
       sales.forEach((s) => {
         if (s.paymentStatus === "paid") {
-          allDates.add(s.date || s.createdAt.slice(0, 10));
+          allDates.add(getSaleDate(s));
         }
       });
 
@@ -354,12 +362,14 @@ export default function AdminDashboardClient({
     );
   }, [chartData, chartMetric]);
 
-  // Total in chart for currently active metric
+  // Total in chart for currently active metric - mathematically guarantees 100% alignment with chart bars
   const currentChartTotal = useMemo(() => {
-    if (chartMetric === "appointments") return totalAppointmentEarnings;
-    if (chartMetric === "products") return totalProductEarnings;
-    return totalClinicRevenue;
-  }, [chartMetric, totalAppointmentEarnings, totalProductEarnings, totalClinicRevenue]);
+    return chartData.reduce((acc, d) => {
+      if (chartMetric === "appointments") return acc + d.appointmentRev;
+      if (chartMetric === "products") return acc + d.productRev;
+      return acc + d.totalRev;
+    }, 0);
+  }, [chartData, chartMetric]);
 
   // Toggle payment status on sale
   const handleToggleSalePayment = async (sale: ProductSale) => {
