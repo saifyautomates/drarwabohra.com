@@ -647,73 +647,108 @@ export default function AdminDashboardClient({
       </div>
 
       {/* -------------------- Interactive Revenue Chart -------------------- */}
-      <section className="card p-6 shadow-sm bg-paper border border-line">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+      <section className="relative overflow-hidden rounded-3xl border-2 border-emerald/25 bg-gradient-to-b from-white via-cream/30 to-emerald-soft/15 p-6 sm:p-8 shadow-xl">
+        {/* Ambient Colorful Background Glows */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -top-24 -left-24 h-72 w-72 rounded-full bg-gradient-to-tr from-emerald/25 via-teal-400/20 to-transparent blur-3xl"
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -top-24 -right-24 h-72 w-72 rounded-full bg-gradient-to-bl from-amber-400/25 via-gold/25 to-transparent blur-3xl"
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -bottom-20 left-1/3 h-60 w-60 rounded-full bg-gradient-to-t from-purple-500/15 via-pink-400/10 to-transparent blur-3xl"
+        />
+
+        {/* Header with Title & Metric Selector */}
+        <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-5 mb-8">
           <div>
-            <div className="flex items-center gap-2">
-              <span className="flex h-3 w-3 rounded-full bg-emerald" />
-              <h3 className="font-display text-lg font-bold text-ink">
-                Revenue &amp; Earnings Trend
+            <div className="flex items-center gap-2.5">
+              <span className="relative flex h-3.5 w-3.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald opacity-75" />
+                <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-gradient-to-tr from-emerald-dark to-emerald" />
+              </span>
+              <h3 className="font-display text-xl sm:text-2xl font-extrabold bg-gradient-to-r from-ink via-emerald-dark to-teal-800 bg-clip-text text-transparent">
+                Revenue &amp; Earnings Analytics
               </h3>
+              <span className="hidden sm:inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-emerald-soft to-teal-50 px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-emerald-dark border border-emerald/25 shadow-xs">
+                Live IST
+              </span>
             </div>
-            <p className="mt-0.5 text-xs text-smoke">
-              Showing earnings in selected period ({timeRange.toUpperCase()})
+            <p className="mt-1 text-xs text-smoke font-medium">
+              Daily revenue trajectory, consultation income &amp; product sales across period ({timeRange.toUpperCase()})
             </p>
           </div>
 
-          <div className="flex items-center gap-3">
-            {/* Metric Switcher */}
-            <div className="flex rounded-xl bg-cream p-1 border border-line text-xs font-bold">
+          <div className="flex flex-wrap items-center gap-3">
+            {/* Colorful Metric Switcher Buttons */}
+            <div className="flex rounded-2xl bg-cream/90 p-1.5 border border-line shadow-xs text-xs font-bold">
               <button
                 type="button"
                 onClick={() => setChartMetric("all")}
-                className={`rounded-lg px-2.5 py-1 transition-colors ${
+                className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 transition-all ${
                   chartMetric === "all"
-                    ? "bg-white text-ink shadow-xs"
-                    : "text-smoke hover:text-ink"
+                    ? "bg-gradient-to-r from-emerald-dark via-teal-700 to-amber-700 text-white shadow-md font-extrabold"
+                    : "text-smoke hover:text-ink hover:bg-white/60"
                 }`}
               >
-                All Revenue
+                <span>🌈</span>
+                <span>All Revenue</span>
               </button>
               <button
                 type="button"
                 onClick={() => setChartMetric("appointments")}
-                className={`rounded-lg px-2.5 py-1 transition-colors ${
+                className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 transition-all ${
                   chartMetric === "appointments"
-                    ? "bg-white text-emerald-dark shadow-xs"
-                    : "text-smoke hover:text-ink"
+                    ? "bg-gradient-to-r from-teal-700 to-emerald text-white shadow-md font-extrabold"
+                    : "text-smoke hover:text-ink hover:bg-white/60"
                 }`}
               >
-                Consultations
+                <span>🩺</span>
+                <span>Consults</span>
               </button>
               <button
                 type="button"
                 onClick={() => setChartMetric("products")}
-                className={`rounded-lg px-2.5 py-1 transition-colors ${
+                className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 transition-all ${
                   chartMetric === "products"
-                    ? "bg-white text-amber-800 shadow-xs"
-                    : "text-smoke hover:text-ink"
+                    ? "bg-gradient-to-r from-amber-600 via-gold to-orange-500 text-white shadow-md font-extrabold"
+                    : "text-smoke hover:text-ink hover:bg-white/60"
                 }`}
               >
-                Product Sales
+                <span>🧴</span>
+                <span>Products</span>
               </button>
             </div>
 
-            <div className="text-right hidden md:block">
-              <span className="block text-[11px] font-bold uppercase tracking-wider text-smoke">
-                Period Total
-              </span>
-              <span className="font-display text-xl font-bold text-ink">
-                {formatINR(currentChartTotal)}
-              </span>
+            {/* Total Period Pill Badge */}
+            <div className="rounded-2xl bg-gradient-to-r from-emerald-dark via-teal-600 to-gold p-[2px] shadow-md">
+              <div className="rounded-[14px] bg-white/95 px-4 py-1.5 backdrop-blur text-right">
+                <span className="block text-[10px] font-extrabold uppercase tracking-wider text-smoke">
+                  Selected Total
+                </span>
+                <span className="font-display text-lg sm:text-xl font-black bg-gradient-to-r from-emerald-dark to-amber-700 bg-clip-text text-transparent">
+                  {formatINR(currentChartTotal)}
+                </span>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Visual Bar Chart */}
+        {/* Visual Multi-Color Bar Chart */}
         <div className="relative pt-6 pb-2">
-          {/* Chart Bars */}
-          <div className="flex items-end justify-between gap-2 sm:gap-4 h-48 sm:h-56 px-2 border-b border-line">
+          {/* Subtle Horizontal Grid Guidelines */}
+          <div className="absolute inset-0 top-6 bottom-8 pointer-events-none flex flex-col justify-between opacity-30">
+            <div className="w-full border-t border-dashed border-emerald-dark" />
+            <div className="w-full border-t border-dashed border-emerald-dark" />
+            <div className="w-full border-t border-dashed border-emerald-dark" />
+            <div className="w-full border-t border-line" />
+          </div>
+
+          {/* Chart Bars Grid */}
+          <div className="relative z-10 flex items-end justify-between gap-2 sm:gap-5 h-52 sm:h-64 px-2 sm:px-4">
             {chartData.map((d, idx) => {
               const activeVal =
                 chartMetric === "appointments"
@@ -724,8 +759,8 @@ export default function AdminDashboardClient({
 
               const heightPct =
                 maxChartRevenue > 0
-                  ? Math.max(8, Math.round((activeVal / maxChartRevenue) * 100))
-                  : 8;
+                  ? Math.max(10, Math.round((activeVal / maxChartRevenue) * 100))
+                  : 10;
               const hasRevenue = activeVal > 0;
               const isHovered = hoveredDataIndex === idx;
 
@@ -737,81 +772,149 @@ export default function AdminDashboardClient({
                   onMouseLeave={() => setHoveredDataIndex(null)}
                   onClick={() => setHoveredDataIndex(idx)}
                 >
-                  {/* Floating Tooltip */}
+                  {/* Floating Glowing Glass Tooltip */}
                   {isHovered && (
-                    <div className="absolute -top-14 z-30 flex flex-col items-center animate-in fade-in zoom-in-95 duration-150 pointer-events-none">
-                      <div className="rounded-xl bg-ink px-3 py-1.5 text-center text-white shadow-xl text-xs whitespace-nowrap">
-                        <span className="font-bold text-emerald-light">
-                          {formatINR(activeVal)}
-                        </span>
-                        <div className="text-[10px] text-white/80 space-x-1.5">
-                          <span>🩺 {formatINR(d.appointmentRev)}</span>
-                          <span>·</span>
-                          <span>🧴 {formatINR(d.productRev)}</span>
+                    <div className="absolute -top-16 z-40 flex flex-col items-center animate-in fade-in zoom-in-95 duration-150 pointer-events-none">
+                      <div className="rounded-2xl border border-emerald/40 bg-gradient-to-br from-ink via-slate-900 to-teal-950 p-2.5 text-center text-white shadow-2xl text-xs whitespace-nowrap backdrop-blur-md ring-2 ring-emerald/20">
+                        <div className="flex items-center justify-between gap-3 border-b border-white/15 pb-1 mb-1">
+                          <span className="text-[10px] text-white/70 font-bold">{d.label}</span>
+                          <span className="font-mono font-extrabold text-sm text-gold">
+                            {formatINR(activeVal)}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-3 text-[10px] text-white/85">
+                          <span className="flex items-center gap-1 font-semibold text-emerald-light">
+                            <span className="h-2 w-2 rounded-full bg-emerald" />
+                            <span>Consults: {formatINR(d.appointmentRev)}</span>
+                          </span>
+                          <span className="flex items-center gap-1 font-semibold text-amber-300">
+                            <span className="h-2 w-2 rounded-full bg-gold" />
+                            <span>Products: {formatINR(d.productRev)}</span>
+                          </span>
                         </div>
                       </div>
-                      <div className="h-2 w-2 rotate-45 bg-ink -mt-1" />
+                      <div className="h-2.5 w-2.5 rotate-45 bg-slate-900 border-r border-b border-emerald/40 -mt-1.5" />
                     </div>
                   )}
 
-                  {/* Top value label */}
-                  {hasRevenue && (
-                    <span className="text-[10px] font-mono font-bold text-emerald-dark mb-1 hidden sm:inline">
+                  {/* Top Floating Amount Pill */}
+                  {hasRevenue ? (
+                    <span className="mb-2 rounded-full bg-gradient-to-r from-emerald-dark via-teal-700 to-emerald px-2 py-0.5 text-[10px] font-mono font-black text-white shadow-md transform group-hover:scale-110 transition-transform hidden sm:inline-block">
                       {formatINR(activeVal)}
+                    </span>
+                  ) : (
+                    <span className="mb-2 text-[10px] font-mono text-smoke/50 hidden sm:inline-block">
+                      ₹0
                     </span>
                   )}
 
-                  {/* The Bar itself */}
+                  {/* The Vibrant Colorful Multi-Segment Bar */}
                   <div
                     style={{ height: `${heightPct}%` }}
-                    className={`w-full max-w-[42px] rounded-t-xl transition-all duration-300 relative overflow-hidden ${
+                    className={`w-full max-w-[48px] rounded-t-2xl transition-all duration-300 relative overflow-hidden flex flex-col justify-end shadow-md ${
                       isHovered
-                        ? "bg-gradient-to-t from-emerald-dark via-emerald to-gold shadow-md scale-105"
-                        : chartMetric === "products"
-                        ? "bg-gradient-to-t from-amber-700 via-gold to-amber-400 opacity-90"
-                        : chartMetric === "appointments"
-                        ? "bg-gradient-to-t from-emerald-dark via-emerald to-emerald-light opacity-90"
-                        : "bg-gradient-to-t from-emerald-dark via-emerald to-gold opacity-90"
+                        ? "shadow-xl shadow-emerald/40 scale-105 ring-2 ring-gold"
+                        : "shadow-sm shadow-emerald/20"
                     }`}
                   >
-                    <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    {/* If All Revenue metric: show colorful stacked gradient */}
+                    {chartMetric === "all" ? (
+                      <>
+                        {/* Top segment: Product Sales (Vibrant Gold & Orange) */}
+                        {d.productRev > 0 && (
+                          <div
+                            style={{
+                              height: `${Math.round((d.productRev / Math.max(1, d.totalRev)) * 100)}%`,
+                            }}
+                            className="w-full bg-gradient-to-t from-amber-500 via-gold to-orange-400 border-b border-white/20 transition-all"
+                            title={`Products: ${formatINR(d.productRev)}`}
+                          />
+                        )}
+                        {/* Bottom segment: Consultations (Vibrant Emerald & Cyan) */}
+                        <div
+                          style={{
+                            height: d.productRev > 0
+                              ? `${Math.round((d.appointmentRev / Math.max(1, d.totalRev)) * 100)}%`
+                              : "100%",
+                          }}
+                          className={`w-full ${
+                            hasRevenue
+                              ? "bg-gradient-to-t from-teal-800 via-emerald to-cyan-400"
+                              : "bg-line/60"
+                          } transition-all`}
+                          title={`Consultations: ${formatINR(d.appointmentRev)}`}
+                        />
+                      </>
+                    ) : chartMetric === "products" ? (
+                      /* Product Sales Metric: Vibrant Sunset Amber to Coral gradient */
+                      <div
+                        className={`h-full w-full ${
+                          hasRevenue
+                            ? "bg-gradient-to-t from-amber-700 via-gold to-orange-400"
+                            : "bg-line/60"
+                        }`}
+                      />
+                    ) : (
+                      /* Consultations Metric: Electric Emerald & Cyan gradient */
+                      <div
+                        className={`h-full w-full ${
+                          hasRevenue
+                            ? "bg-gradient-to-t from-teal-800 via-emerald to-cyan-400"
+                            : "bg-line/60"
+                        }`}
+                      />
+                    )}
+
+                    {/* Glossy Sheen overlay on hover */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-transparent via-white/25 to-white/40 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
                   </div>
                 </div>
               );
             })}
           </div>
 
-          {/* X-Axis Labels */}
-          <div className="flex justify-between gap-2 sm:gap-4 px-2 pt-2 text-[10px] sm:text-xs text-smoke font-medium">
+          {/* X-Axis Date Pills */}
+          <div className="flex justify-between gap-2 sm:gap-5 px-2 sm:px-4 pt-3 text-[10px] sm:text-xs font-semibold">
             {chartData.map((d, idx) => (
-              <span
+              <div
                 key={idx}
-                className={`flex-1 text-center truncate ${
-                  hoveredDataIndex === idx ? "text-ink font-bold" : ""
-                }`}
-                title={d.label}
+                className="flex-1 flex justify-center truncate"
               >
-                {d.label}
-              </span>
+                <span
+                  className={`rounded-xl px-2 sm:px-3 py-1 text-center truncate transition-all ${
+                    hoveredDataIndex === idx
+                      ? "bg-emerald text-white font-bold shadow-md scale-105"
+                      : "bg-white/80 border border-line text-ink/80 hover:bg-white"
+                  }`}
+                  title={d.label}
+                >
+                  {d.label}
+                </span>
+              </div>
             ))}
           </div>
         </div>
 
-        {/* Legend */}
-        <div className="mt-4 pt-3 border-t border-line/60 flex flex-wrap items-center justify-between gap-3 text-xs text-smoke">
-          <div className="flex items-center gap-4">
-            <span className="flex items-center gap-1.5">
-              <span className="h-2.5 w-2.5 rounded-full bg-emerald-dark" />
-              <span>Consultations</span>
+        {/* Colorful Legend & Quick Insights Footer */}
+        <div className="mt-6 pt-4 border-t border-emerald/15 flex flex-wrap items-center justify-between gap-4 text-xs font-medium">
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="flex items-center gap-2 rounded-xl bg-white/90 border border-emerald/30 px-3 py-1 text-emerald-dark shadow-xs">
+              <span className="h-3 w-3 rounded-full bg-gradient-to-tr from-teal-700 to-cyan-400 shadow-xs" />
+              <span><strong>Consultations Fee</strong> (Emerald Cyan)</span>
             </span>
-            <span className="flex items-center gap-1.5">
-              <span className="h-2.5 w-2.5 rounded-full bg-gold" />
-              <span>Product Sales</span>
+            <span className="flex items-center gap-2 rounded-xl bg-white/90 border border-amber-300 px-3 py-1 text-amber-800 shadow-xs">
+              <span className="h-3 w-3 rounded-full bg-gradient-to-tr from-amber-500 to-orange-400 shadow-xs" />
+              <span><strong>Dispensary Products</strong> (Sunset Gold)</span>
+            </span>
+            <span className="flex items-center gap-2 rounded-xl bg-white/90 border border-purple-300 px-3 py-1 text-purple-800 shadow-xs">
+              <span className="h-3 w-3 rounded-full bg-gradient-to-tr from-purple-600 to-pink-500 shadow-xs" />
+              <span><strong>Combined Trajectory</strong></span>
             </span>
           </div>
-          <span className="text-[11px]">
-            Hover or tap any bar for detailed consultation vs product breakdown.
-          </span>
+
+          <div className="text-[11px] text-smoke font-semibold flex items-center gap-1.5">
+            <span>✨ Tap or hover bars to inspect exact patient and dispensary splits</span>
+          </div>
         </div>
       </section>
 
