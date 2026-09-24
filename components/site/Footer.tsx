@@ -102,25 +102,27 @@ export default function Footer({ settings }: { settings: Settings }) {
       </div>
 
       <div className="border-t border-line">
-        <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-5 text-xs text-smoke sm:flex-row sm:items-center sm:justify-between sm:px-6">
-          <p>
-            © {year} Dr. Arwa Bohra. All rights reserved.
-          </p>
-          <div className="flex flex-wrap items-center gap-2 sm:gap-4">
-            <p>Online Homeopathy E-Consultation Platform.</p>
-            <span className="hidden sm:inline text-smoke/40">•</span>
-            <p>
-              Developed by{" "}
-              <a
-                href="https://wa.me/917014098198?text=Hello%20Saify%20Automates%2C%20I%20am%20interested%20in%20website%20and%20automation%20development."
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-bold text-emerald-dark hover:text-emerald hover:underline transition-colors inline-flex items-center gap-1 cursor-pointer"
-              >
-                <span>Saify Automates</span>
-                <span className="text-[11px]">↗</span>
-              </a>
+        <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-5 pb-32 sm:pb-6 text-xs text-smoke sm:flex-row sm:items-center sm:justify-between sm:px-6">
+          <div>
+            <p className="font-medium text-ink/90">
+              © {year} {settings.doctorName || "Dr. Arwa Bohra"}. All rights reserved.
             </p>
+            <p className="mt-1 text-[11px] text-smoke">
+              Online Homeopathy E-Consultation Platform.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-1.5 text-xs text-ink/90 pt-1 sm:pt-0">
+            <span>Developed by</span>
+            <a
+              href="https://wa.me/917014098198?text=Hello%20Saify%20Automates%2C%20I%20am%20interested%20in%20website%20and%20automation%20development."
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 font-bold text-emerald-dark hover:text-emerald hover:underline transition-colors bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-200/80 cursor-pointer active:scale-95"
+            >
+              <span>Saify Automates</span>
+              <span className="text-[12px] font-normal">↗</span>
+            </a>
           </div>
         </div>
       </div>
