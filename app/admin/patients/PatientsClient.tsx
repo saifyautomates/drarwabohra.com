@@ -46,6 +46,37 @@ export default function PatientsClient({
   const [showAddModal, setShowAddModal] = useState(false);
   const [savingNote, setSavingNote] = useState(false);
   const [noteSuccess, setNoteSuccess] = useState(false);
+  const [deletedKeys, setDeletedKeys] = useState<Set<string>>(new Set());
+  const [deletingKey, setDeletingKey] = useState<string | null>(null);
+
+  const handleDeletePatient = async (p: UnifiedPatient) => {
+    if (!confirm(`Are you sure you want to permanently delete patient "${p.name}" and all associated medical records?`)) {
+      return;
+    }
+
+    setDeletingKey(p.key);
+    try {
+      const targetId = p.recordId || "direct";
+      const res = await fetch(`/api/admin/patients/${targetId}?mobile=${encodeURIComponent(p.mobile)}`, {
+        method: "DELETE",
+      });
+
+      if (res.ok) {
+        setDeletedKeys((prev) => new Set(prev).add(p.key));
+        setPatients((prev) => prev.filter((pr) => pr.id !== p.recordId && normPhone(pr.mobile) !== normPhone(p.mobile)));
+        if (selectedPatient?.key === p.key) {
+          setSelectedPatient(null);
+        }
+      } else {
+        alert("Failed to delete patient. Please try again.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Error deleting patient.");
+    } finally {
+      setDeletingKey(null);
+    }
+  };
 
   // Edit Note in Medical Profile
   const [editingNotes, setEditingNotes] = useState("");
@@ -183,8 +214,10 @@ export default function PatientsClient({
     });
 
     // Sort by most recent interaction
-    return Array.from(map.values()).sort((a, b) => b.lastDate.localeCompare(a.lastDate));
-  }, [patients, bookings, sales]);
+    return Array.from(map.values())
+      .filter((p) => !deletedKeys.has(p.key))
+      .sort((a, b) => b.lastDate.localeCompare(a.lastDate));
+  }, [patients, bookings, sales, deletedKeys]);
 
   // Filtered patients based on search and tags
   const filteredPatients = useMemo(() => {
@@ -576,8 +609,8 @@ export default function PatientsClient({
                         {p.totalSpent > 0 ? formatINR(p.totalSpent) : "—"}
                       </td>
 
-                      {/* Medical Card Button */}
-                      <td className="py-3.5 pr-4 text-right">
+                      {/* Medical Card & Delete Action */}
+                      <td className="py-3.5 pr-4 text-right space-x-1.5 whitespace-nowrap">
                         <button
                           type="button"
                           onClick={(e) => {
@@ -587,6 +620,20 @@ export default function PatientsClient({
                           className="btn-outline !py-1.5 !px-3 text-xs font-semibold hover:border-emerald hover:text-emerald-dark"
                         >
                           View Card →
+                        </button>
+                        <button
+                          type="button"
+                          disabled={deletingKey === p.key}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeletePatient(p);
+                          }}
+                          className="rounded-lg p-1.5 text-smoke hover:bg-red-50 hover:text-red-600 transition-colors inline-flex items-center align-middle"
+                          title="Delete patient and clinical records"
+                        >
+                          <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          </svg>
                         </button>
                       </td>
                     </tr>
@@ -820,6 +867,29 @@ export default function PatientsClient({
                   ))}
                 </div>
               )}
+            </div>
+
+            {/* Modal Footer with Delete Patient Button */}
+            <div className="mt-7 pt-4 border-t border-line flex items-center justify-between">
+              <button
+                type="button"
+                disabled={deletingKey === selectedPatient.key}
+                onClick={() => handleDeletePatient(selectedPatient)}
+                className="text-xs font-bold text-red-600 hover:text-red-700 hover:bg-red-50 rounded-xl px-3 py-2 transition-colors flex items-center gap-1.5"
+              >
+                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+                <span>{deletingKey === selectedPatient.key ? "Deleting..." : "Delete Patient Record"}</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setSelectedPatient(null)}
+                className="btn-outline !py-2 !px-4 text-xs font-semibold"
+              >
+                Close Profile
+              </button>
             </div>
           </div>
         </div>
